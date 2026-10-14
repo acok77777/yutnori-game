@@ -1,12 +1,11 @@
-```javascript
-const sticks = [...document.querySelectorAll(".yut-stick")];
 
-const throwButton = document.getElementById("throwButton");
-const resultEmoji = document.getElementById("resultEmoji");
-const resultName = document.getElementById("resultName");
-const resultMessage = document.getElementById("resultMessage");
-const extraNote = document.getElementById("extraNote");
-const floorShadow = document.getElementById("floorShadow");
+const sticks = [...document.querySelectorAll(".stick")];
+
+const button = document.getElementById("throwButton");
+const emoji = document.getElementById("emoji");
+const name = document.getElementById("name");
+const message = document.getElementById("message");
+const extra = document.getElementById("extra");
 
 const outcomes = [
   { name: "모", emoji: "🎉", steps: 5, extra: true },
@@ -16,113 +15,65 @@ const outcomes = [
   { name: "윷", emoji: "🎊", steps: 4, extra: true }
 ];
 
-let isThrowing = false;
+let busy = false;
 let timers = [];
 
-function clearTimers() {
-  timers.forEach(clearTimeout);
-  timers = [];
-}
-
 function tossYuts() {
-  if (isThrowing || sticks.length !== 4) return;
+  if (busy) return;
 
-  isThrowing = true;
-  throwButton.disabled = true;
-  throwButton.textContent = "🪵 윷 던지는 중...";
-
-  resultEmoji.textContent = "🎲";
-  resultName.textContent = "던지는 중...";
-  resultMessage.textContent = "윷이 공중에서 회전하고 있어요!";
-  extraNote.textContent = "";
-
-  clearTimers();
-
-  const results = sticks.map(() => Math.random() < 0.5);
-  const flippedCount = results.filter(Boolean).length;
-  const outcome = outcomes[flippedCount];
-
-  sticks.forEach((stick, index) => {
-    const body = stick.querySelector(".yut-3d");
-    if (!body) return;
-
-    stick.classList.remove("throwing");
-    stick.style.animation = "none";
-    body.style.animation = "none";
-    body.style.animationPlayState = "running";
-    stick.style.animationPlayState = "running";
-
-    body.style.transform = "rotateX(0deg) rotateY(0deg) rotateZ(0deg)";
-
-    void body.offsetWidth;
-
-    const flipped = results[index];
-
-    // 최종 회전각을 CSS 애니메이션의 마지막 프레임에 전달
-    body.style.setProperty("--end-x", "720deg");
-    body.style.setProperty("--end-y", flipped ? "900deg" : "720deg");
-    body.style.setProperty("--end-z", flipped ? "420deg" : "360deg");
-
-    const startTimer = setTimeout(() => {
-      stick.classList.add("throwing");
-      body.style.animation =
-        "yut-spin 1.8s cubic-bezier(0.22, 0.65, 0.25, 1) both";
-    }, index * 70);
-
-    timers.push(startTimer);
-  });
-
-  if (floorShadow) {
-    floorShadow.style.transform = "translateX(-50%) scale(0.65)";
-    floorShadow.style.opacity = "0.35";
-
-    const shadowTimer = setTimeout(() => {
-      floorShadow.style.transform = "translateX(-50%) scale(1.1)";
-      floorShadow.style.opacity = "0.9";
-    }, 450);
-
-    timers.push(shadowTimer);
+  if (sticks.length !== 4) {
+    name.textContent = "윷 화면을 확인해 주세요.";
+    return;
   }
 
-  const finishTimer = setTimeout(() => {
+  busy = true;
+  button.disabled = true;
+  button.textContent = "🪵 윷 던지는 중...";
+  emoji.textContent = "🎲";
+  name.textContent = "던지는 중...";
+  message.textContent = "윷이 섞이며 빙글빙글 돌아요!";
+  extra.textContent = "";
+
+  timers.forEach(clearTimeout);
+  timers = [];
+
+  const results = sticks.map(() => Math.random() < 0.5);
+  const count = results.filter(Boolean).length;
+  const result = outcomes[count];
+
+  sticks.forEach((stick, i) => {
+    stick.classList.remove("tossing", "flipped");
+    void stick.offsetWidth;
+
+    const timer = setTimeout(() => {
+      stick.classList.add("tossing");
+
+      if (results[i]) {
+        stick.classList.add("flipped");
+      }
+    }, i * 100);
+
+    timers.push(timer);
+  });
+
+  const finish = setTimeout(() => {
     sticks.forEach((stick) => {
-      const body = stick.querySelector(".yut-3d");
-      if (!body) return;
-
-      // 애니메이션의 마지막 프레임을 계산해 회전 상태로 고정
-      const style = getComputedStyle(body);
-      const matrix = style.transform;
-
-      body.style.animation = "none";
-      body.style.transform = matrix === "none"
-        ? "rotateX(0deg) rotateY(0deg) rotateZ(0deg)"
-        : matrix;
-
-      stick.classList.remove("throwing");
-      stick.style.animation = "none";
+      stick.classList.remove("tossing");
     });
 
-    resultEmoji.textContent = outcome.emoji;
-    resultName.textContent = `${outcome.name} (${outcome.steps}칸 이동)`;
-    resultMessage.textContent = `${outcome.steps}칸 이동`;
-    extraNote.textContent = outcome.extra
+    emoji.textContent = result.emoji;
+    name.textContent = `${result.name} (${result.steps}칸 이동)`;
+    message.textContent = `${result.steps}칸 이동`;
+    extra.textContent = result.extra
       ? "🎉 한 번 더 던지세요!"
       : "";
 
-    if (floorShadow) {
-      floorShadow.style.transform = "translateX(-50%) scale(1)";
-      floorShadow.style.opacity = "0.8";
-    }
+    button.disabled = false;
+    button.textContent = "🎲 윷 던지기";
+    busy = false;
+  }, 1900);
 
-    throwButton.disabled = false;
-    throwButton.textContent = "🎲 윷 던지기";
-    isThrowing = false;
-  }, 2050);
-
-  timers.push(finishTimer);
+  timers.push(finish);
 }
 
-if (throwButton) {
-  throwButton.addEventListener("click", tossYuts);
-}
-```
+button.addEventListener("click", tossYuts);
