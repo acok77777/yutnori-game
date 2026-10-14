@@ -5,20 +5,25 @@
 
 :root {
   --bg: #fff8ed;
-  --card: #ffffff;
   --brown: #754526;
-  --dark-brown: #4b2b1b;
-  --accent: #d97735;
   --text: #3d2a1d;
-  --muted: #8b796b;
+}
+
+html {
+  width: 100%;
+  height: 100%;
 }
 
 body {
   margin: 0;
-  padding: 20px 14px 32px;
-  background:
-    radial-gradient(circle at top left, #ffedcf 0, transparent 35%),
-    var(--bg);
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: max(5px, env(safe-area-inset-top)) 10px
+    max(5px, env(safe-area-inset-bottom));
+  background: var(--bg);
   color: var(--text);
   font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
 }
@@ -29,120 +34,71 @@ button {
 
 .app {
   width: 100%;
-  max-width: 540px;
+  max-width: 440px;
   margin: 0 auto;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 22px;
-}
-
-.sub-title {
-  font-size: 10px;
-  letter-spacing: 2px;
-  font-weight: 800;
-  color: #b27b45;
-  margin-bottom: 8px;
+  margin: 0;
+  padding: 2px 0 7px;
 }
 
 .header h1 {
-  font-size: clamp(25px, 6vw, 34px);
-  margin: 0 0 9px;
+  margin: 0;
+  font-size: clamp(22px, 6vw, 29px);
+  line-height: 1.25;
   font-weight: 900;
 }
 
-.header p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.game-card,
-.history-card {
-  background: var(--card);
+.game-card {
+  width: 100%;
+  padding: 10px;
+  background: #fff;
   border: 1px solid #f0dfc9;
-  border-radius: 22px;
-  padding: 17px;
-  box-shadow: 0 9px 25px rgba(105, 65, 30, 0.08);
-  margin-bottom: 16px;
-}
-
-.card-heading,
-.history-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  border-radius: 18px;
+  box-shadow: 0 5px 16px rgba(105, 65, 30, 0.07);
 }
 
 .card-heading {
+  font-size: 15px;
   font-weight: 900;
-  font-size: 16px;
-  margin-bottom: 14px;
+  text-align: center;
+  margin-bottom: 7px;
 }
 
-.wood-label {
-  color: #9a6a3d;
-  background: #fff1db;
-  padding: 6px 9px;
-  border-radius: 20px;
-  font-size: 11px;
-  white-space: nowrap;
-}
-
-/* 윷 던지는 공간 */
+/* 화면 높이에 따라 윷 공간 자동 조절 */
 .arena {
   position: relative;
-  height: 370px;
+  width: 100%;
+  height: clamp(150px, 31svh, 255px);
+  min-height: 150px;
   overflow: hidden;
   border: 2px solid #d7a873;
-  border-radius: 18px;
+  border-radius: 15px;
   background:
-    radial-gradient(ellipse at center, rgba(255, 240, 205, 0.2), transparent 70%),
     repeating-linear-gradient(
       0deg,
-      rgba(116, 66, 28, 0.035) 0px,
+      rgba(116, 66, 28, 0.035) 0,
       rgba(116, 66, 28, 0.035) 2px,
       transparent 2px,
-      transparent 13px
+      transparent 12px
     ),
     linear-gradient(145deg, #e8c08b, #d8a56b 55%, #c98f52);
-  box-shadow: inset 0 3px 12px rgba(92, 48, 16, 0.13);
-}
-
-.floor-line {
-  position: absolute;
-  left: 8%;
-  right: 8%;
-  bottom: 43px;
-  height: 3px;
-  border-radius: 50%;
-  background: rgba(94, 52, 25, 0.28);
-}
-
-.floor-shadow {
-  position: absolute;
-  width: 72%;
-  height: 34px;
-  bottom: 26px;
-  left: 14%;
-  border-radius: 50%;
-  background: rgba(77, 42, 19, 0.14);
-  filter: blur(9px);
+  box-shadow: inset 0 3px 10px rgba(92, 48, 16, 0.12);
 }
 
 .yut-set {
   position: absolute;
-  inset: 15px 10px 50px;
-  perspective: 850px;
+  inset: 5px 5px 22px;
+  perspective: 700px;
 }
 
 .yut-stick {
   position: absolute;
-  width: 43px;
-  height: 132px;
-  border-radius: 22px;
+  width: clamp(29px, 8vw, 38px);
+  height: clamp(84px, 19svh, 120px);
+  border-radius: 20px;
   border: 2px solid #a87542;
   display: flex;
   align-items: center;
@@ -150,33 +106,33 @@ button {
   transform-origin: center center;
   transform-style: preserve-3d;
   box-shadow:
-    inset 0 2px 3px rgba(255, 255, 255, 0.65),
+    inset 0 2px 3px rgba(255, 255, 255, 0.6),
     inset 0 -4px 6px rgba(111, 65, 29, 0.13),
-    0 6px 7px rgba(76, 42, 17, 0.24);
+    0 4px 5px rgba(76, 42, 17, 0.22);
   z-index: 2;
 }
 
 .yut-stick:nth-child(1) {
-  left: 17%;
-  top: 29%;
+  left: 12%;
+  top: 22%;
   transform: rotate(-27deg);
 }
 
 .yut-stick:nth-child(2) {
-  left: 36%;
-  top: 18%;
+  left: 34%;
+  top: 12%;
   transform: rotate(18deg);
 }
 
 .yut-stick:nth-child(3) {
-  left: 55%;
-  top: 31%;
+  left: 56%;
+  top: 24%;
   transform: rotate(-12deg);
 }
 
 .yut-stick:nth-child(4) {
-  left: 73%;
-  top: 20%;
+  left: 77%;
+  top: 13%;
   transform: rotate(29deg);
 }
 
@@ -198,16 +154,15 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 13px;
+  gap: clamp(8px, 2svh, 12px);
 }
 
 .dots i {
   display: block;
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: #754526;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* 뒤집힌 면: 갈색 */
@@ -226,7 +181,28 @@ button {
   display: none;
 }
 
-/* 윷이 공중에서 회전한 뒤 바닥에 떨어지는 애니메이션 */
+.floor-line {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  bottom: 15px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(94, 52, 25, 0.28);
+}
+
+.floor-shadow {
+  position: absolute;
+  width: 72%;
+  height: 20px;
+  bottom: 4px;
+  left: 14%;
+  border-radius: 50%;
+  background: rgba(77, 42, 19, 0.18);
+  filter: blur(6px);
+}
+
+/* 윷이 공중으로 올라갔다가 바닥에 떨어짐 */
 .yut-stick.throwing {
   animation: yut-toss 1.12s cubic-bezier(0.22, 0.72, 0.24, 1) both;
 }
@@ -239,43 +215,43 @@ button {
   }
 
   12% {
-    translate: -9px -75px;
+    translate: -7px -45px;
     rotate: 100deg;
     scale: 1.08;
   }
 
   30% {
-    translate: 10px -145px;
+    translate: 9px -85px;
     rotate: 250deg;
     scale: 1.12;
   }
 
   48% {
-    translate: -7px -95px;
+    translate: -6px -55px;
     rotate: 420deg;
     scale: 1.08;
   }
 
   65% {
-    translate: 7px -28px;
+    translate: 6px -18px;
     rotate: 570deg;
     scale: 1.02;
   }
 
   76% {
-    translate: -3px 8px;
+    translate: -3px 5px;
     rotate: 660deg;
     scale: 0.98;
   }
 
   85% {
-    translate: 2px -9px;
+    translate: 2px -5px;
     rotate: 700deg;
     scale: 1;
   }
 
   93% {
-    translate: 0 3px;
+    translate: 0 2px;
     rotate: 715deg;
     scale: 0.99;
   }
@@ -287,59 +263,7 @@ button {
   }
 }
 
-.throw-hint {
-  position: absolute;
-  bottom: 12px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 800;
-  color: #6b4226;
-  z-index: 3;
-}
-
-.legend {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px 18px;
-  margin: 15px 0;
-  font-size: 12px;
-  color: #705746;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.legend-stick {
-  width: 15px;
-  height: 34px;
-  border: 1px solid #a87542;
-  border-radius: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.legend-stick .dots {
-  gap: 3px;
-}
-
-.legend-stick .dots i {
-  width: 3px;
-  height: 3px;
-}
-
-.legend-stick.face-brown {
-  border-color: #4a2918;
-}
-
-/* 결과 영역: 전체 가운데 정렬 */
+/* 결과를 크게, 가운데에 */
 .result-panel {
   display: flex;
   flex-direction: column;
@@ -347,203 +271,127 @@ button {
   justify-content: center;
   text-align: center;
   width: 100%;
-  min-height: 155px;
-  margin-top: 10px;
-  padding: 20px 12px;
-  border-radius: 18px;
-  background: #fff8ed;
-  border: 1px solid #f3e2ca;
+  min-height: 88px;
+  padding: 7px 4px 3px;
+  margin-top: 5px;
 }
 
-/* 결과 이모지 */
 .result-emoji {
-  font-size: 38px;
-  line-height: 1.2;
-  margin-bottom: 9px;
-  text-align: center;
+  font-size: 25px;
+  line-height: 1.1;
+  margin-bottom: 2px;
 }
 
-/* 개 (2개 뒤집힘) 결과를 크게 표시 */
 .result-name {
   display: block;
   width: 100%;
+  margin: 0 auto 3px;
   text-align: center;
-  font-size: clamp(27px, 6vw, 34px);
-  line-height: 1.35;
+  font-size: clamp(25px, 7vw, 32px);
+  line-height: 1.2;
   font-weight: 900;
-  letter-spacing: -0.8px;
-  color: #754526;
-  margin: 0 auto 8px;
+  letter-spacing: -0.7px;
+  color: var(--brown);
   overflow-wrap: anywhere;
 }
 
 .result-message {
   width: 100%;
   text-align: center;
+  font-size: 12px;
+  line-height: 1.35;
   color: #806b59;
-  font-size: 14px;
-  line-height: 1.6;
 }
 
+/* 화면에서 가장 눈에 띄는 버튼 */
 .throw-button {
   display: block;
   width: 100%;
+  min-height: 52px;
   border: 0;
-  border-radius: 15px;
-  margin-top: 15px;
-  padding: 17px 12px;
+  border-radius: 13px;
+  margin-top: 4px;
+  padding: 12px;
   color: white;
   background: linear-gradient(135deg, #c97535, #a65322);
   font-size: 18px;
   font-weight: 900;
   cursor: pointer;
-  box-shadow: 0 5px 0 #82401d, 0 8px 15px rgba(125, 62, 25, 0.17);
-  transition: transform 0.12s, box-shadow 0.12s, opacity 0.12s;
+  box-shadow: 0 3px 0 #82401d;
 }
 
 .throw-button:active {
-  transform: translateY(3px);
-  box-shadow: 0 2px 0 #82401d;
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #82401d;
 }
 
 .throw-button:disabled {
-  opacity: 0.65;
+  opacity: 0.7;
   cursor: wait;
 }
 
 .extra-note {
-  min-height: 17px;
-  margin: 12px 0 0;
+  min-height: 15px;
+  margin: 5px 0 0;
   text-align: center;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   color: #bf6a28;
 }
 
-.history-heading {
-  margin-bottom: 12px;
-}
-
-.history-heading h2 {
-  font-size: 16px;
-  margin: 0;
-}
-
-#throwCount {
-  font-size: 12px;
-  color: var(--muted);
-  background: #f8f0e5;
-  border-radius: 20px;
-  padding: 6px 9px;
-}
-
-.history-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.history-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  padding: 11px 2px;
-  border-bottom: 1px solid #f2e9dd;
-  font-size: 13px;
-}
-
-.history-list li:last-child {
-  border-bottom: 0;
-}
-
-.empty-history {
-  justify-content: center !important;
-  color: #a39385;
-  padding: 18px 0 !important;
-}
-
-.history-result {
-  font-weight: 900;
-  color: #754526;
-}
-
-.history-detail {
-  color: #96816e;
-  font-size: 11px;
-  text-align: right;
-}
-
-.reset-button {
-  width: 100%;
-  border: 1px solid #e9d9c7;
-  border-radius: 11px;
-  padding: 11px;
-  margin-top: 12px;
-  color: #80634c;
-  background: #fffaf4;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.reset-button:active {
-  background: #f7ead9;
-}
-
-footer {
-  text-align: center;
-  font-size: 12px;
-  color: #a18a75;
-  padding: 3px 0 10px;
-}
-
-@media (max-width: 390px) {
-  body {
-    padding: 14px 10px 24px;
+/* 아주 낮은 화면에서는 더 압축 */
+@media (max-height: 620px) {
+  .header {
+    padding-bottom: 4px;
   }
 
-  .game-card,
-  .history-card {
-    padding: 13px;
-    border-radius: 18px;
+  .header h1 {
+    font-size: 22px;
+  }
+
+  .game-card {
+    padding: 7px;
+  }
+
+  .card-heading {
+    margin-bottom: 4px;
+    font-size: 13px;
   }
 
   .arena {
-    height: 350px;
+    height: 155px;
+    min-height: 140px;
   }
 
   .yut-stick {
-    width: 37px;
-    height: 116px;
-  }
-
-  .dots {
-    gap: 11px;
-  }
-
-  .dots i {
-    width: 7px;
-    height: 7px;
-  }
-
-  .legend {
-    gap: 10px;
-    font-size: 11px;
+    height: 82px;
   }
 
   .result-panel {
-    min-height: 145px;
-    padding: 18px 8px;
+    min-height: 73px;
+    padding-top: 4px;
+  }
+
+  .result-emoji {
+    font-size: 21px;
   }
 
   .result-name {
-    font-size: clamp(25px, 7vw, 31px);
+    font-size: 25px;
   }
-}
 
-@media (max-height: 700px) and (min-width: 391px) {
-  .arena {
-    height: 330px;
+  .result-message {
+    font-size: 11px;
+  }
+
+  .throw-button {
+    min-height: 46px;
+    padding: 9px;
+    font-size: 16px;
+  }
+
+  .extra-note {
+    margin-top: 3px;
   }
 }
 
