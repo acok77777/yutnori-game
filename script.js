@@ -45,18 +45,21 @@ function tossYuts() {
     stick.classList.remove("tossing", "flipped");
     void stick.offsetWidth;
 
-    const timer = setTimeout(() => {
+    const startTimer = setTimeout(() => {
       stick.classList.add("tossing");
 
-      if (results[i]) {
-        stick.classList.add("flipped");
-      }
-    }, i * 100);
+      // 회전이 진행되는 중간에 최종 면으로 전환
+      const flipTimer = setTimeout(() => {
+        stick.classList.toggle("flipped", results[i]);
+      }, 650);
 
-    timers.push(timer);
+      timers.push(flipTimer);
+    }, i * 60);
+
+    timers.push(startTimer);
   });
 
-  const finish = setTimeout(() => {
+  const finishTimer = setTimeout(() => {
     sticks.forEach((stick) => {
       stick.classList.remove("tossing");
     });
@@ -71,11 +74,9 @@ function tossYuts() {
     button.disabled = false;
     button.textContent = "🎲 윷 던지기";
     busy = false;
-  }, 1900);
+  }, 1500);
 
-  timers.push(finish);
+  timers.push(finishTimer);
 }
 
 button.addEventListener("click", tossYuts);
-
-console.log("윷 게임 스크립트가 실행됐어요!");
