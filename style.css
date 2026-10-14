@@ -113,44 +113,44 @@ button:focus-visible {
   white-space: nowrap;
 }
 
-/* 윷 던지는 네모 공간 */
+/* 윷 던지는 네모 박스: 크게 확대 */
 .arena {
   position: relative;
   display: grid;
   place-items: center;
-  min-height: 205px;
-  margin: 9px 0;
+  min-height: 270px;
+  margin: 10px 0;
   overflow: hidden;
   border: 3px solid #e9b875;
-  border-radius: 20px;
+  border-radius: 22px;
   background: linear-gradient(145deg, #fff0c9, #fce2b1);
-  box-shadow: inset 0 0 0 5px rgba(255,255,255,.4);
+  box-shadow: inset 0 0 0 6px rgba(255,255,255,.4);
 }
 
 .arena::before {
   content: "";
   position: absolute;
-  inset: 9px;
+  inset: 10px;
   border: 1px dashed rgba(169,113,55,.35);
-  border-radius: 12px;
+  border-radius: 14px;
   pointer-events: none;
 }
 
 .arena-spark {
   position: absolute;
   color: #c8944e;
-  font-size: 21px;
+  font-size: 24px;
   opacity: .7;
 }
 
 .spark-one {
-  top: 16px;
-  left: 18px;
+  top: 20px;
+  left: 23px;
 }
 
 .spark-two {
-  top: 25px;
-  right: 20px;
+  top: 32px;
+  right: 25px;
 }
 
 /* 윷 4개 */
@@ -158,16 +158,16 @@ button:focus-visible {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(2, 74px);
-  gap: 13px 18px;
+  grid-template-columns: repeat(2, 78px);
+  gap: 16px 22px;
   justify-content: center;
   transform: rotate(-7deg);
 }
 
 .yut-stick {
   position: relative;
-  width: 74px;
-  height: 23px;
+  width: 78px;
+  height: 25px;
   overflow: hidden;
   border: 2px solid #784522;
   border-radius: 50% / 60%;
@@ -192,7 +192,7 @@ button:focus-visible {
 .yut-stick.face-round .stick-mark {
   position: absolute;
   left: 50%;
-  top: 6px;
+  top: 7px;
   width: 27px;
   height: 9px;
   transform: translateX(-50%);
@@ -201,7 +201,7 @@ button:focus-visible {
   border: 1px solid rgba(255,220,165,.3);
 }
 
-/* 뒤집힌 면: 밝은 면과 표시 */
+/* 뒤집힌 밝은 면 */
 .yut-stick.face-flat {
   background: linear-gradient(180deg, #f9e7bf, #e7c58d 55%, #c89a5c);
   border-color: #ad7b43;
@@ -217,7 +217,7 @@ button:focus-visible {
 
 .yut-stick.face-flat .stick-mark {
   position: absolute;
-  top: 8px;
+  top: 9px;
   left: 50%;
   width: 5px;
   height: 5px;
@@ -258,13 +258,13 @@ button:focus-visible {
 .throw-hint {
   position: absolute;
   z-index: 2;
-  bottom: 8px;
+  bottom: 10px;
   color: #9a744a;
   font-size: 11px;
   font-weight: bold;
 }
 
-/* 결과 */
+/* 결과 표시 */
 .result-panel {
   display: flex;
   align-items: center;
@@ -321,7 +321,7 @@ button:focus-visible {
   100% { transform: scale(1); }
 }
 
-/* 항상 같은 글자가 표시되는 버튼 */
+/* 윷 던지기 버튼 */
 .throw-button {
   display: block;
   width: 100%;
@@ -356,6 +356,7 @@ button:focus-visible {
   font-size: 11px;
 }
 
+/* 기록 */
 .history-card {
   margin-top: 9px;
   padding: 11px 12px;
@@ -408,6 +409,7 @@ button:focus-visible {
   font-size: 10px;
 }
 
+/* 알림 */
 .toast {
   position: fixed;
   left: 50%;
@@ -430,7 +432,7 @@ button:focus-visible {
   transform: translate(-50%, 0);
 }
 
-/* 작은 휴대폰은 던지기 화면을 더 압축 */
+/* 작은 휴대폰 */
 @media (max-width: 390px) {
   .app {
     width: calc(100% - 16px);
@@ -453,26 +455,26 @@ button:focus-visible {
   }
 
   .arena {
-    min-height: 174px;
+    min-height: 230px;
     margin: 7px 0;
   }
 
   .sticks {
-    grid-template-columns: repeat(2, 65px);
-    gap: 11px 15px;
+    grid-template-columns: repeat(2, 68px);
+    gap: 13px 17px;
   }
 
   .yut-stick {
-    width: 65px;
-    height: 21px;
+    width: 68px;
+    height: 22px;
   }
 
   .yut-stick.face-flat .stick-mark {
-    top: 7px;
+    top: 8px;
   }
 
   .yut-stick.face-round .stick-mark {
-    top: 5px;
+    top: 6px;
   }
 
   .result-panel {
@@ -501,13 +503,14 @@ button:focus-visible {
   }
 }
 
+/* 높이가 낮은 화면 */
 @media (max-height: 700px) {
   .app {
     padding-top: 4px;
   }
 
   .arena {
-    min-height: 150px;
+    min-height: 200px;
   }
 
   .game-card {
@@ -524,6 +527,7 @@ button:focus-visible {
   }
 }
 
+/* 애니메이션 줄이기 설정 */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
