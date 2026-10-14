@@ -14,36 +14,36 @@ const outcomes = {
     emoji: "🎉",
     steps: 5,
     extra: true,
-    message: "5칸 이동",
+    message: "5칸 이동"
   },
   1: {
     name: "도",
     emoji: "🍀",
     steps: 1,
     extra: false,
-    message: "1칸 이동",
+    message: "1칸 이동"
   },
   2: {
     name: "개",
     emoji: "🌟",
     steps: 2,
     extra: false,
-    message: "2칸 이동",
+    message: "2칸 이동"
   },
   3: {
     name: "걸",
     emoji: "✨",
     steps: 3,
     extra: false,
-    message: "3칸 이동",
+    message: "3칸 이동"
   },
   4: {
     name: "윷",
     emoji: "🎊",
     steps: 4,
     extra: true,
-    message: "4칸 이동",
-  },
+    message: "4칸 이동"
+  }
 };
 
 let isThrowing = false;
@@ -54,33 +54,37 @@ function clearAnimationTimers() {
   animationTimers = [];
 }
 
-function setStickFace(stick, flipped, rotation = {}) {
+/*
+ * 애니메이션의 마지막 각도와 동일한 각도로 고정한다.
+ * 면을 CSS 클래스 교체로 바꾸지 않고 3D 회전으로 결정한다.
+ */
+function setFinalRotation(stick, flipped, index) {
   const body = stick.querySelector(".yut-3d");
 
   stick.classList.remove("throwing");
-  body.classList.remove("spinning");
-
-  // 이전 회전값 제거
   body.style.animation = "none";
-  body.style.transform = "";
 
-  // 브라우저가 초기 상태를 적용하도록 함
+  const finalAngles = [
+    { x: 720, y: 900, z: 420 },
+    { x: 720, y: 900, z: 420 },
+    { x: 720, y: 900, z: 420 },
+    { x: 720, y: 900, z: 420 }
+  ];
+
+  const angle = finalAngles[index];
+
+  /*
+   * 점 3개 면이 앞을 향하는 기본 각도에서
+   * 갈색 면은 Y축으로 180도를 더 회전한다.
+   */
+  const finalY = angle.y + (flipped ? 180 : 0);
+
+  body.style.transform =
+    `rotateX(${angle.x}deg) ` +
+    `rotateY(${finalY}deg) ` +
+    `rotateZ(${angle.z}deg)`;
+
   void body.offsetWidth;
-
-  // 앞면은 점 3개, 뒷면은 갈색
-  if (flipped) {
-    body.style.transform =
-      `rotateX(${rotation.x ?? 0}deg) ` +
-      `rotateY(${180 + (rotation.y ?? 0)}deg) ` +
-      `rotateZ(${rotation.z ?? 0}deg)`;
-  } else {
-    body.style.transform =
-      `rotateX(${rotation.x ?? 0}deg) ` +
-      `rotateY(${rotation.y ?? 0}deg) ` +
-      `rotateZ(${rotation.z ?? 0}deg)`;
-  }
-
-  body.style.animation = "";
 }
 
 function tossYuts() {
@@ -102,7 +106,8 @@ function tossYuts() {
 
   clearAnimationTimers();
 
-  // 각 윷의 뒤집힘을 개별적으로 결정
+  // 던지기 시작 시 결과를 정한다.
+  // true = 갈색 면, false = 점 3개 면
   const results = sticks.map(() => Math.random() < 0.5);
 
   sticks.forEach((stick, index) => {
@@ -114,20 +119,29 @@ function tossYuts() {
 
     void body.offsetWidth;
 
-    // 윷마다 서로 다른 회전 타이밍과 방향을 줌
-    const delay = index * 85;
+    const delay = index * 70;
 
     const timer = setTimeout(() => {
       stick.classList.add("throwing");
 
-      body.style.animation = "yut-spin 1.5s cubic-bezier(0.2, 0.7, 0.25, 1) both";
+      /*
+       * 각 윷이 던지는 동안 여러 번 회전한다.
+       * 최종 면은 결과에 맞춰 마지막 회전에서 향하도록 한다.
+       */
+      const flipped = results[index];
 
-      // 윷마다 다른 회전 방향을 사용
-      body.style.animationDelay = "0s";
-
+      const endY = flipped ? 1080 : 900;
       const direction = index % 2 === 0 ? 1 : -1;
-      body.style.transformOrigin = "center center";
-      body.style.setProperty("--spin-direction", direction);
+      const endZ = 420 * direction;
+
+      body.style.animation = "none";
+      void body.offsetWidth;
+
+      body.style.animation =
+        `yut-spin 1.5s cubic-bezier(0.2, 0.7, 0.25, 1) both`;
+
+      body.style.setProperty("--end-y", `${endY}deg`);
+      body.style.setProperty("--end-z", `${endZ}deg`);
     }, delay);
 
     animationTimers.push(timer);
@@ -137,26 +151,15 @@ function tossYuts() {
     let flippedCount = 0;
 
     sticks.forEach((stick, index) => {
-      const body = stick.querySelector(".yut-3d");
-
-      stick.classList.remove("throwing");
-      body.style.animation = "none";
-
       const flipped = results[index];
 
-      if (flipped) {
-        flippedCount++;
-      }
+      if (flipped) flippedCount++;
 
-      // 최종 면이 보이도록 실제 회전 각도를 설정
-      const rotations = [
-        { x: 0, y: 0, z: -7 },
-        { x: 8, y: 0, z: 5 },
-        { x: -6, y: 0, z: 9 },
-        { x: 4, y: 0, z: -4 },
-      ];
-
-      setStickFace(stick, flipped, rotations[index]);
+      /*
+       * 애니메이션이 끝난 뒤 최종 각도를 그대로 유지한다.
+       * 마지막 순간에 색깔이나 면을 교체하지 않는다.
+       */
+      setFinalRotation(stick, flipped, index);
     });
 
     const outcome = outcomes[flippedCount];
