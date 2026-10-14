@@ -1,285 +1,188 @@
 
-(() => {
-  'use strict';
+const sticks = Array.from(document.querySelectorAll(".yut-stick"));
+const throwButton = document.getElementById("throwButton");
+const resetButton = document.getElementById("resetButton");
 
-  const outcomes = {
-    0: {
-      name: '모',
-      emoji: '🌟',
-      message: '모 5칸 한번 더 !',
-      extra: true
-    },
-    1: {
-      name: '도',
-      emoji: '🐾',
-      message: '도 1칸',
-      extra: false
-    },
-    2: {
-      name: '개',
-      emoji: '🐶',
-      message: '개 2칸',
-      extra: false
-    },
-    3: {
-      name: '걸',
-      emoji: '🐎',
-      message: '걸 3칸',
-      extra: false
-    },
-    4: {
-      name: '윷',
-      emoji: '🎉',
-      message: '윷 4칸 한번 더 !',
-      extra: true
-    }
-  };
+const resultEmoji = document.getElementById("resultEmoji");
+const resultName = document.getElementById("resultName");
+const resultMessage = document.getElementById("resultMessage");
+const extraNote = document.getElementById("extraNote");
 
-  const arena = document.getElementById('arena');
-  const sticks = [...document.querySelectorAll('.yut-stick')];
-  const throwButton = document.getElementById('throwButton');
-  const soundToggle = document.getElementById('soundToggle');
-  const resetButton = document.getElementById('resetButton');
+const historyList = document.getElementById("historyList");
+const throwCount = document.getElementById("throwCount");
+const throwHint = document.getElementById("throwHint");
 
-  const turnCount = document.getElementById('turnCount');
-  const throwHint = document.getElementById('throwHint');
-  const resultPanel = document.getElementById('resultPanel');
-  const resultEmoji = document.getElementById('resultEmoji');
-  const resultName = document.getElementById('resultName');
-  const resultMessage = document.getElementById('resultMessage');
-  const extraTurnNote = document.getElementById('extraTurnNote');
-  const historyList = document.getElementById('historyList');
-  const toast = document.getElementById('toast');
+const outcomes = {
+  0: {
+    name: "모",
+    emoji: "🎉",
+    steps: 5,
+    extra: true,
+    message: "모! 다섯 칸 이동하고 한 번 더 던져요!"
+  },
+  1: {
+    name: "도",
+    emoji: "🍀",
+    steps: 1,
+    extra: false,
+    message: "도! 한 칸 이동하세요."
+  },
+  2: {
+    name: "개",
+    emoji: "🌟",
+    steps: 2,
+    extra: false,
+    message: "개! 두 칸 이동하세요."
+  },
+  3: {
+    name: "걸",
+    emoji: "✨",
+    steps: 3,
+    extra: false,
+    message: "걸! 세 칸 이동하세요."
+  },
+  4: {
+    name: "윷",
+    emoji: "🎊",
+    steps: 4,
+    extra: true,
+    message: "윷! 네 칸 이동하고 한 번 더 던져요!"
+  }
+};
 
-  let totalThrows = 0;
-  let history = [];
-  let isRolling = false;
-  let soundOn = true;
-  let audioContext = null;
-  let toastTimer = null;
+let totalThrows = 0;
+let isThrowing = false;
+let animationTimers = [];
 
-  // 효과음: 외부 오디오 파일이 필요하지 않습니다.
-  function playTone(frequency, duration, volume = 0.035) {
-    if (!soundOn) return;
+function clearAnimationTimers() {
+  animationTimers.forEach(clearTimeout);
+  animationTimers = [];
+}
 
-    try {
-      const AudioClass =
-        window.AudioContext || window.webkitAudioContext;
+function setStickFace(stick, flipped) {
+  stick.classList.remove("face-dots", "face-brown", "throwing");
 
-      if (!AudioClass) return;
+  stick.classList.add(flipped ? "face-brown" : "face-dots");
 
-      if (!audioContext) {
-        audioContext = new AudioClass();
-      }
+  stick.style.removeProperty("translate");
+  stick.style.removeProperty("rotate");
+  stick.style.removeProperty("scale");
+}
 
-      if (audioContext.state === 'suspended') {
-        audioContext.resume();
-      }
+function showOutcome(flippedCount) {
+  const outcome = outcomes[flippedCount];
 
-      const oscillator = audioContext.createOscillator();
-      const gain = audioContext.createGain();
+  resultEmoji.textContent = outcome.emoji;
+  resultName.textContent = `${outcome.name} (${flippedCount}개 뒤집힘)`;
+  resultMessage.textContent = outcome.message;
 
-      oscillator.type = 'triangle';
-      oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(volume, audioContext.currentTime);
-      gain.gain.exponentialRampToValueAtTime(
-        0.001,
-        audioContext.currentTime + duration
-      );
+  extraNote.textContent = outcome.extra
+    ? "🎉 한 번 더 던질 수 있어요!"
+    : "";
 
-      oscillator.connect(gain);
-      gain.connect(audioContext.destination);
+  throwHint.textContent = `${outcome.name}! ${outcome.steps}칸 이동`;
 
-      oscillator.start();
-      oscillator.stop(audioContext.currentTime + duration);
-    } catch (error) {
-      // 효과음 지원 여부와 관계없이 게임을 계속 실행합니다.
-    }
+  addHistory(outcome, flippedCount);
+}
+
+function addHistory(outcome, flippedCount) {
+  totalThrows += 1;
+  throwCount.textContent = `총 ${totalThrows}회`;
+
+  const emptyItem = historyList.querySelector(".empty-history");
+  if (emptyItem) {
+    emptyItem.remove();
   }
 
-  function playResultSound(outcome) {
-    const notes = outcome.extra
-      ? [523, 659, 784, 1046]
-      : [440, 554, 659];
+  const item = document.createElement("li");
 
-    notes.forEach((frequency, index) => {
-      window.setTimeout(() => {
-        playTone(frequency, 0.13);
-      }, index * 75);
-    });
-  }
+  const left = document.createElement("span");
+  left.className = "history-result";
+  left.textContent = `${totalThrows}. ${outcome.emoji} ${outcome.name}`;
 
-  function showToast(message) {
-    toast.textContent = message;
-    toast.classList.add('show');
+  const right = document.createElement("span");
+  right.className = "history-detail";
+  right.textContent = `${outcome.steps}칸 · 갈색 ${flippedCount}개`;
 
-    window.clearTimeout(toastTimer);
+  item.append(left, right);
+  historyList.prepend(item);
+}
 
-    toastTimer = window.setTimeout(() => {
-      toast.classList.remove('show');
-    }, 2000);
-  }
+function tossYuts() {
+  if (isThrowing) return;
 
-  // 윷 네 개의 앞뒤 면을 각각 무작위로 결정합니다.
-  // face-flat은 뒤집힌 밝은 면입니다.
-  function tossSticks() {
-    let flippedCount = 0;
+  isThrowing = true;
+  throwButton.disabled = true;
+  throwButton.textContent = "🪵 윷이 떨어지는 중...";
 
-    sticks.forEach((stick) => {
-      const flipped = Math.random() < 0.5;
+  extraNote.textContent = "";
+  throwHint.textContent = "빙글빙글! 윷이 떨어집니다!";
+  resultEmoji.textContent = "🎲";
+  resultName.textContent = "윷 던지는 중...";
+  resultMessage.textContent = "윷이 바닥에 닿을 때까지 기다려 주세요.";
 
-      stick.classList.remove('face-flat', 'face-round');
-      stick.classList.add(flipped ? 'face-flat' : 'face-round');
+  clearAnimationTimers();
 
-      // 굴러간 뒤의 각도를 무작위로 표시합니다.
-      const angle = Math.floor(Math.random() * 35) - 17;
-      stick.style.transform = `rotate(${angle}deg)`;
+  // true는 갈색 면, false는 점 3개 면
+  const results = sticks.map(() => Math.random() < 0.5);
 
-      if (flipped) {
-        flippedCount++;
-      }
-    });
+  sticks.forEach((stick, index) => {
+    stick.classList.remove("throwing");
+    setStickFace(stick, false);
 
-    return flippedCount;
-  }
+    // 브라우저가 초기 상태를 적용하도록 함
+    void stick.offsetWidth;
 
-  function renderHistory() {
-    historyList.replaceChildren();
+    const timer = setTimeout(() => {
+      stick.classList.add("throwing");
+    }, index * 75);
 
-    if (history.length === 0) {
-      const empty = document.createElement('p');
-      empty.className = 'empty-history';
-      empty.textContent = '아직 던진 기록이 없어요.';
-      historyList.appendChild(empty);
-      return;
-    }
-
-    history.slice(0, 20).forEach((item) => {
-      const chip = document.createElement('div');
-      chip.className = 'history-chip';
-
-      const index = document.createElement('span');
-      index.className = 'chip-index';
-      index.textContent = `${item.turn}회`;
-
-      const emoji = document.createElement('span');
-      emoji.textContent = item.emoji;
-
-      const name = document.createElement('strong');
-      name.textContent = item.name;
-
-      chip.append(index, emoji, name);
-      historyList.appendChild(chip);
-    });
-  }
-
-  function displayResult(flippedCount) {
-    const outcome = outcomes[flippedCount];
-
-    totalThrows++;
-    turnCount.textContent = `${totalThrows}회`;
-
-    resultEmoji.textContent = outcome.emoji;
-    resultName.textContent = `${outcome.name} (${flippedCount}개 뒤집힘)`;
-    resultMessage.textContent = outcome.message;
-
-    throwHint.textContent =
-      `뒤집힌 윷 ${flippedCount}개 · ${outcome.name}!`;
-
-    resultPanel.classList.remove('pop');
-    void resultPanel.offsetWidth;
-    resultPanel.classList.add('pop');
-
-    history.unshift({
-      turn: totalThrows,
-      name: outcome.name,
-      emoji: outcome.emoji
-    });
-
-    renderHistory();
-
-    if (outcome.extra) {
-      extraTurnNote.textContent =
-        `🎉 ${outcome.message} 다시 던져 보세요!`;
-
-      showToast(`${outcome.name}! 한 번 더 던져 보세요!`);
-    } else {
-      extraTurnNote.textContent =
-        '윷 또는 모가 나오면 한 번 더!';
-    }
-
-    playResultSound(outcome);
-  }
-
-  function throwYut() {
-    if (isRolling) return;
-
-    isRolling = true;
-    throwButton.disabled = true;
-    arena.classList.add('is-rolling');
-
-    throwHint.textContent = '데굴데굴~ 윷이 굴러가요!';
-    playTone(220, 0.12, 0.025);
-
-    window.setTimeout(() => {
-      // 애니메이션이 끝난 뒤 실제 면과 결과를 결정합니다.
-      arena.classList.remove('is-rolling');
-
-      const flippedCount = tossSticks();
-      displayResult(flippedCount);
-
-      isRolling = false;
-      throwButton.disabled = false;
-
-      // 버튼 글자는 언제나 동일하게 유지합니다.
-      throwButton.textContent = '🎲 윷던지기';
-    }, 700);
-  }
-
-  function resetGame() {
-    if (isRolling) return;
-
-    totalThrows = 0;
-    history = [];
-
-    turnCount.textContent = '0회';
-    resultEmoji.textContent = '🍀';
-    resultName.textContent = '윷을 던져 보세요!';
-    resultMessage.textContent = '도 · 개 · 걸 · 윷 · 모';
-    throwHint.textContent = '던질 준비 완료!';
-    extraTurnNote.textContent = '윷 또는 모가 나오면 한 번 더!';
-
-    sticks.forEach((stick) => {
-      stick.classList.remove('face-flat');
-      stick.classList.add('face-round');
-      stick.style.transform = '';
-    });
-
-    throwButton.textContent = '🎲 윷던지기';
-
-    renderHistory();
-    showToast('기록을 초기화했어요! 🍀');
-  }
-
-  throwButton.addEventListener('click', throwYut);
-  resetButton.addEventListener('click', resetGame);
-
-  soundToggle.addEventListener('click', () => {
-    soundOn = !soundOn;
-
-    soundToggle.textContent = soundOn ? '🔊' : '🔇';
-    soundToggle.setAttribute('aria-pressed', String(soundOn));
-    soundToggle.setAttribute(
-      'aria-label',
-      soundOn ? '효과음 끄기' : '효과음 켜기'
-    );
-
-    showToast(soundOn ? '효과음을 켰어요!' : '효과음을 껐어요.');
-
-    if (soundOn) {
-      playTone(660, 0.1);
-    }
+    animationTimers.push(timer);
   });
 
-  renderHistory();
-})();
+  const finishTimer = setTimeout(() => {
+    let flippedCount = 0;
+
+    sticks.forEach((stick, index) => {
+      stick.classList.remove("throwing");
+      setStickFace(stick, results[index]);
+
+      if (results[index]) {
+        flippedCount += 1;
+      }
+    });
+
+    showOutcome(flippedCount);
+
+    isThrowing = false;
+    throwButton.disabled = false;
+    throwButton.textContent = "🎲 윷 던지기";
+  }, 1550);
+
+  animationTimers.push(finishTimer);
+}
+
+function resetGame() {
+  if (isThrowing) return;
+
+  totalThrows = 0;
+  throwCount.textContent = "총 0회";
+  historyList.innerHTML =
+    '<li class="empty-history">아직 던진 기록이 없어요.</li>';
+
+  resultEmoji.textContent = "🍀";
+  resultName.textContent = "준비됐나요?";
+  resultMessage.textContent = "아래 버튼을 눌러 윷을 던져 보세요.";
+  extraNote.textContent = "";
+  throwHint.textContent = "윷을 던져 보세요!";
+
+  sticks.forEach((stick) => {
+    setStickFace(stick, false);
+  });
+
+  throwButton.disabled = false;
+  throwButton.textContent = "🎲 윷 던지기";
+}
+
+throwButton.addEventListener("click", tossYuts);
+resetButton.addEventListener("click", resetGame);
