@@ -1,188 +1,554 @@
 
-const sticks = Array.from(document.querySelectorAll(".yut-stick"));
-const throwButton = document.getElementById("throwButton");
-const resetButton = document.getElementById("resetButton");
+* {
+  box-sizing: border-box;
+}
 
-const resultEmoji = document.getElementById("resultEmoji");
-const resultName = document.getElementById("resultName");
-const resultMessage = document.getElementById("resultMessage");
-const extraNote = document.getElementById("extraNote");
+:root {
+  --bg: #fff8ed;
+  --card: #ffffff;
+  --brown: #754526;
+  --dark-brown: #4b2b1b;
+  --accent: #d97735;
+  --text: #3d2a1d;
+  --muted: #8b796b;
+}
 
-const historyList = document.getElementById("historyList");
-const throwCount = document.getElementById("throwCount");
-const throwHint = document.getElementById("throwHint");
+body {
+  margin: 0;
+  padding: 20px 14px 32px;
+  background:
+    radial-gradient(circle at top left, #ffedcf 0, transparent 35%),
+    var(--bg);
+  color: var(--text);
+  font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+}
 
-const outcomes = {
-  0: {
-    name: "모",
-    emoji: "🎉",
-    steps: 5,
-    extra: true,
-    message: "모! 다섯 칸 이동하고 한 번 더 던져요!"
-  },
-  1: {
-    name: "도",
-    emoji: "🍀",
-    steps: 1,
-    extra: false,
-    message: "도! 한 칸 이동하세요."
-  },
-  2: {
-    name: "개",
-    emoji: "🌟",
-    steps: 2,
-    extra: false,
-    message: "개! 두 칸 이동하세요."
-  },
-  3: {
-    name: "걸",
-    emoji: "✨",
-    steps: 3,
-    extra: false,
-    message: "걸! 세 칸 이동하세요."
-  },
-  4: {
-    name: "윷",
-    emoji: "🎊",
-    steps: 4,
-    extra: true,
-    message: "윷! 네 칸 이동하고 한 번 더 던져요!"
+button {
+  font: inherit;
+}
+
+.app {
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.sub-title {
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 800;
+  color: #b27b45;
+  margin-bottom: 8px;
+}
+
+.header h1 {
+  font-size: clamp(25px, 6vw, 34px);
+  margin: 0 0 9px;
+  font-weight: 900;
+}
+
+.header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.game-card,
+.history-card {
+  background: var(--card);
+  border: 1px solid #f0dfc9;
+  border-radius: 22px;
+  padding: 17px;
+  box-shadow: 0 9px 25px rgba(105, 65, 30, 0.08);
+  margin-bottom: 16px;
+}
+
+.card-heading,
+.history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.card-heading {
+  font-weight: 900;
+  font-size: 16px;
+  margin-bottom: 14px;
+}
+
+.wood-label {
+  color: #9a6a3d;
+  background: #fff1db;
+  padding: 6px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* 윷 던지는 공간 */
+.arena {
+  position: relative;
+  height: 370px;
+  overflow: hidden;
+  border: 2px solid #d7a873;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at center, rgba(255, 240, 205, 0.2), transparent 70%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(116, 66, 28, 0.035) 0px,
+      rgba(116, 66, 28, 0.035) 2px,
+      transparent 2px,
+      transparent 13px
+    ),
+    linear-gradient(145deg, #e8c08b, #d8a56b 55%, #c98f52);
+  box-shadow: inset 0 3px 12px rgba(92, 48, 16, 0.13);
+}
+
+.floor-line {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 43px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(94, 52, 25, 0.28);
+}
+
+.floor-shadow {
+  position: absolute;
+  width: 72%;
+  height: 34px;
+  bottom: 26px;
+  left: 14%;
+  border-radius: 50%;
+  background: rgba(77, 42, 19, 0.14);
+  filter: blur(9px);
+}
+
+.yut-set {
+  position: absolute;
+  inset: 15px 10px 50px;
+  perspective: 850px;
+}
+
+.yut-stick {
+  position: absolute;
+  width: 43px;
+  height: 132px;
+  border-radius: 22px;
+  border: 2px solid #a87542;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.65),
+    inset 0 -4px 6px rgba(111, 65, 29, 0.13),
+    0 6px 7px rgba(76, 42, 17, 0.24);
+  z-index: 2;
+}
+
+.yut-stick:nth-child(1) {
+  left: 17%;
+  top: 29%;
+  transform: rotate(-27deg);
+}
+
+.yut-stick:nth-child(2) {
+  left: 36%;
+  top: 18%;
+  transform: rotate(18deg);
+}
+
+.yut-stick:nth-child(3) {
+  left: 55%;
+  top: 31%;
+  transform: rotate(-12deg);
+}
+
+.yut-stick:nth-child(4) {
+  left: 73%;
+  top: 20%;
+  transform: rotate(29deg);
+}
+
+/* 안 뒤집힌 면: 점 3개 */
+.face-dots {
+  background: linear-gradient(
+    90deg,
+    #cda36a 0%,
+    #f6dfb5 24%,
+    #fff0d1 52%,
+    #e6c18c 78%,
+    #bb8a51 100%
+  );
+  border-color: #a87542;
+}
+
+.dots {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+}
+
+.dots i {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #754526;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* 뒤집힌 면: 갈색 */
+.face-brown {
+  background: linear-gradient(
+    90deg,
+    #63391f 0%,
+    #8b542f 30%,
+    #754526 60%,
+    #4d2b19 100%
+  );
+  border-color: #4a2918;
+}
+
+.face-brown .dots {
+  display: none;
+}
+
+/* 윷이 공중에서 회전한 뒤 바닥에 떨어지는 애니메이션 */
+.yut-stick.throwing {
+  animation: yut-toss 1.12s cubic-bezier(0.22, 0.72, 0.24, 1) both;
+}
+
+@keyframes yut-toss {
+  0% {
+    translate: 0 0;
+    rotate: 0deg;
+    scale: 1;
   }
-};
 
-let totalThrows = 0;
-let isThrowing = false;
-let animationTimers = [];
-
-function clearAnimationTimers() {
-  animationTimers.forEach(clearTimeout);
-  animationTimers = [];
-}
-
-function setStickFace(stick, flipped) {
-  stick.classList.remove("face-dots", "face-brown", "throwing");
-
-  stick.classList.add(flipped ? "face-brown" : "face-dots");
-
-  stick.style.removeProperty("translate");
-  stick.style.removeProperty("rotate");
-  stick.style.removeProperty("scale");
-}
-
-function showOutcome(flippedCount) {
-  const outcome = outcomes[flippedCount];
-
-  resultEmoji.textContent = outcome.emoji;
-  resultName.textContent = `${outcome.name} (${flippedCount}개 뒤집힘)`;
-  resultMessage.textContent = outcome.message;
-
-  extraNote.textContent = outcome.extra
-    ? "🎉 한 번 더 던질 수 있어요!"
-    : "";
-
-  throwHint.textContent = `${outcome.name}! ${outcome.steps}칸 이동`;
-
-  addHistory(outcome, flippedCount);
-}
-
-function addHistory(outcome, flippedCount) {
-  totalThrows += 1;
-  throwCount.textContent = `총 ${totalThrows}회`;
-
-  const emptyItem = historyList.querySelector(".empty-history");
-  if (emptyItem) {
-    emptyItem.remove();
+  12% {
+    translate: -9px -75px;
+    rotate: 100deg;
+    scale: 1.08;
   }
 
-  const item = document.createElement("li");
+  30% {
+    translate: 10px -145px;
+    rotate: 250deg;
+    scale: 1.12;
+  }
 
-  const left = document.createElement("span");
-  left.className = "history-result";
-  left.textContent = `${totalThrows}. ${outcome.emoji} ${outcome.name}`;
+  48% {
+    translate: -7px -95px;
+    rotate: 420deg;
+    scale: 1.08;
+  }
 
-  const right = document.createElement("span");
-  right.className = "history-detail";
-  right.textContent = `${outcome.steps}칸 · 갈색 ${flippedCount}개`;
+  65% {
+    translate: 7px -28px;
+    rotate: 570deg;
+    scale: 1.02;
+  }
 
-  item.append(left, right);
-  historyList.prepend(item);
+  76% {
+    translate: -3px 8px;
+    rotate: 660deg;
+    scale: 0.98;
+  }
+
+  85% {
+    translate: 2px -9px;
+    rotate: 700deg;
+    scale: 1;
+  }
+
+  93% {
+    translate: 0 3px;
+    rotate: 715deg;
+    scale: 0.99;
+  }
+
+  100% {
+    translate: 0 0;
+    rotate: 720deg;
+    scale: 1;
+  }
 }
 
-function tossYuts() {
-  if (isThrowing) return;
-
-  isThrowing = true;
-  throwButton.disabled = true;
-  throwButton.textContent = "🪵 윷이 떨어지는 중...";
-
-  extraNote.textContent = "";
-  throwHint.textContent = "빙글빙글! 윷이 떨어집니다!";
-  resultEmoji.textContent = "🎲";
-  resultName.textContent = "윷 던지는 중...";
-  resultMessage.textContent = "윷이 바닥에 닿을 때까지 기다려 주세요.";
-
-  clearAnimationTimers();
-
-  // true는 갈색 면, false는 점 3개 면
-  const results = sticks.map(() => Math.random() < 0.5);
-
-  sticks.forEach((stick, index) => {
-    stick.classList.remove("throwing");
-    setStickFace(stick, false);
-
-    // 브라우저가 초기 상태를 적용하도록 함
-    void stick.offsetWidth;
-
-    const timer = setTimeout(() => {
-      stick.classList.add("throwing");
-    }, index * 75);
-
-    animationTimers.push(timer);
-  });
-
-  const finishTimer = setTimeout(() => {
-    let flippedCount = 0;
-
-    sticks.forEach((stick, index) => {
-      stick.classList.remove("throwing");
-      setStickFace(stick, results[index]);
-
-      if (results[index]) {
-        flippedCount += 1;
-      }
-    });
-
-    showOutcome(flippedCount);
-
-    isThrowing = false;
-    throwButton.disabled = false;
-    throwButton.textContent = "🎲 윷 던지기";
-  }, 1550);
-
-  animationTimers.push(finishTimer);
+.throw-hint {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: #6b4226;
+  z-index: 3;
 }
 
-function resetGame() {
-  if (isThrowing) return;
-
-  totalThrows = 0;
-  throwCount.textContent = "총 0회";
-  historyList.innerHTML =
-    '<li class="empty-history">아직 던진 기록이 없어요.</li>';
-
-  resultEmoji.textContent = "🍀";
-  resultName.textContent = "준비됐나요?";
-  resultMessage.textContent = "아래 버튼을 눌러 윷을 던져 보세요.";
-  extraNote.textContent = "";
-  throwHint.textContent = "윷을 던져 보세요!";
-
-  sticks.forEach((stick) => {
-    setStickFace(stick, false);
-  });
-
-  throwButton.disabled = false;
-  throwButton.textContent = "🎲 윷 던지기";
+.legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  margin: 15px 0;
+  font-size: 12px;
+  color: #705746;
 }
 
-throwButton.addEventListener("click", tossYuts);
-resetButton.addEventListener("click", resetGame);
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legend-stick {
+  width: 15px;
+  height: 34px;
+  border: 1px solid #a87542;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.legend-stick .dots {
+  gap: 3px;
+}
+
+.legend-stick .dots i {
+  width: 3px;
+  height: 3px;
+}
+
+.legend-stick.face-brown {
+  border-color: #4a2918;
+}
+
+/* 결과 영역: 전체 가운데 정렬 */
+.result-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  min-height: 155px;
+  margin-top: 10px;
+  padding: 20px 12px;
+  border-radius: 18px;
+  background: #fff8ed;
+  border: 1px solid #f3e2ca;
+}
+
+/* 결과 이모지 */
+.result-emoji {
+  font-size: 38px;
+  line-height: 1.2;
+  margin-bottom: 9px;
+  text-align: center;
+}
+
+/* 개 (2개 뒤집힘) 결과를 크게 표시 */
+.result-name {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: clamp(27px, 6vw, 34px);
+  line-height: 1.35;
+  font-weight: 900;
+  letter-spacing: -0.8px;
+  color: #754526;
+  margin: 0 auto 8px;
+  overflow-wrap: anywhere;
+}
+
+.result-message {
+  width: 100%;
+  text-align: center;
+  color: #806b59;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.throw-button {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 15px;
+  margin-top: 15px;
+  padding: 17px 12px;
+  color: white;
+  background: linear-gradient(135deg, #c97535, #a65322);
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #82401d, 0 8px 15px rgba(125, 62, 25, 0.17);
+  transition: transform 0.12s, box-shadow 0.12s, opacity 0.12s;
+}
+
+.throw-button:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #82401d;
+}
+
+.throw-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.extra-note {
+  min-height: 17px;
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: #bf6a28;
+}
+
+.history-heading {
+  margin-bottom: 12px;
+}
+
+.history-heading h2 {
+  font-size: 16px;
+  margin: 0;
+}
+
+#throwCount {
+  font-size: 12px;
+  color: var(--muted);
+  background: #f8f0e5;
+  border-radius: 20px;
+  padding: 6px 9px;
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.history-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 2px;
+  border-bottom: 1px solid #f2e9dd;
+  font-size: 13px;
+}
+
+.history-list li:last-child {
+  border-bottom: 0;
+}
+
+.empty-history {
+  justify-content: center !important;
+  color: #a39385;
+  padding: 18px 0 !important;
+}
+
+.history-result {
+  font-weight: 900;
+  color: #754526;
+}
+
+.history-detail {
+  color: #96816e;
+  font-size: 11px;
+  text-align: right;
+}
+
+.reset-button {
+  width: 100%;
+  border: 1px solid #e9d9c7;
+  border-radius: 11px;
+  padding: 11px;
+  margin-top: 12px;
+  color: #80634c;
+  background: #fffaf4;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.reset-button:active {
+  background: #f7ead9;
+}
+
+footer {
+  text-align: center;
+  font-size: 12px;
+  color: #a18a75;
+  padding: 3px 0 10px;
+}
+
+@media (max-width: 390px) {
+  body {
+    padding: 14px 10px 24px;
+  }
+
+  .game-card,
+  .history-card {
+    padding: 13px;
+    border-radius: 18px;
+  }
+
+  .arena {
+    height: 350px;
+  }
+
+  .yut-stick {
+    width: 37px;
+    height: 116px;
+  }
+
+  .dots {
+    gap: 11px;
+  }
+
+  .dots i {
+    width: 7px;
+    height: 7px;
+  }
+
+  .legend {
+    gap: 10px;
+    font-size: 11px;
+  }
+
+  .result-panel {
+    min-height: 145px;
+    padding: 18px 8px;
+  }
+
+  .result-name {
+    font-size: clamp(25px, 7vw, 31px);
+  }
+}
+
+@media (max-height: 700px) and (min-width: 391px) {
+  .arena {
+    height: 330px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yut-stick.throwing {
+    animation-duration: 0.2s;
+  }
+}
