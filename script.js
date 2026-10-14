@@ -1,7 +1,5 @@
 
 const sticks = [...document.querySelectorAll(".stick")];
-
-const button = document.getElementById("throwButton");
 const emoji = document.getElementById("emoji");
 const name = document.getElementById("name");
 const message = document.getElementById("message");
@@ -51,7 +49,7 @@ function tossYuts() {
       // 회전이 진행되는 중간에 최종 면으로 전환
       const flipTimer = setTimeout(() => {
         stick.classList.toggle("flipped", results[i]);
-      }, 650);
+      }, 325);
 
       timers.push(flipTimer);
     }, i * 60);
@@ -74,7 +72,7 @@ function tossYuts() {
     button.disabled = false;
     button.textContent = "🎲 윷 던지기";
     busy = false;
-  }, 1500);
+  }, 750);
 
   timers.push(finishTimer);
 }
