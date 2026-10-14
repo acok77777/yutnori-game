@@ -84,12 +84,9 @@ function tossYuts() {
       const body = stick.querySelector(".yut-3d");
       const flipped = results[index];
 
-      // 최종 회전 상태를 유지합니다.
-      body.style.animation = "none";
-      body.style.transform =
-        `rotateX(720deg) rotateY(${flipped ? 900 : 720}deg) rotateZ(${flipped ? 420 : 360}deg)`;
-
-      stick.classList.remove("throwing");
+// 애니메이션 마지막 프레임을 유지해 갑작스러운 변화를 방지합니다.
+body.style.animationPlayState = "paused";
+stick.style.animationPlayState = "paused";
     });
 
     resultEmoji.textContent = outcome.emoji;
