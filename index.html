@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fff4d8">
+  <meta name="description" content="도 개 걸 윷 모! 신나는 한국 전통 윷놀이 게임">
+  <title>신나는 윷놀이 🎲</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand-mark">🎲</div>
+      <div class="brand-copy">
+        <p class="eyebrow">우리 함께 놀아요</p>
+        <h1>신나는 윷놀이</h1>
+      </div>
+      <button id="soundToggle" class="icon-button" type="button"
+        aria-pressed="true" aria-label="효과음 끄기">🔊</button>
+    </header>
+
+    <section class="intro">
+      <span class="pill">🌈 오늘의 행운을 던져 봐!</span>
+      <p>윷을 던지고 어떤 결과가 나올지 확인해 보세요.</p>
+    </section>
+
+    <section class="game-card">
+      <div class="arena-heading">
+        <div>
+          <p class="section-kicker">YUT THROW</p>
+          <h2>윷 던지는 곳</h2>
+        </div>
+        <span id="turnCount" class="turn-counter">0회 던짐</span>
+      </div>
+
+      <div id="arena" class="arena" aria-label="윷 던지는 공간">
+        <div class="arena-spark spark-one">✦</div>
+        <div class="arena-spark spark-two">✧</div>
+        <div class="arena-spark spark-three">✦</div>
+
+        <div class="sticks" id="sticks">
+          <div class="yut-stick face-flat" data-stick="0"><span class="stick-mark"></span></div>
+          <div class="yut-stick face-round" data-stick="1"><span class="stick-mark"></span></div>
+          <div class="yut-stick face-flat" data-stick="2"><span class="stick-mark"></span></div>
+          <div class="yut-stick face-round" data-stick="3"><span class="stick-mark"></span></div>
+        </div>
+
+        <div id="throwHint" class="throw-hint">윷을 던질 준비 완료!</div>
+      </div>
+
+      <div class="result-panel" aria-live="polite" aria-atomic="true">
+        <div id="resultEmoji" class="result-emoji">🍀</div>
+        <div class="result-copy">
+          <p class="result-label">이번 결과</p>
+          <h2 id="resultName">어떤 결과가 나올까요?</h2>
+          <p id="resultMessage" class="result-message">
+            아래 버튼을 눌러 윷을 던져 보세요!
+          </p>
+        </div>
+      </div>
+
+      <button id="throwButton" class="throw-button" type="button">
+        <span class="button-icon">🎲</span>
+        <span id="throwButtonText">윷 던지기!</span>
+        <span class="button-arrow">➜</span>
+      </button>
+
+      <p class="extra-turn-note" id="extraTurnNote">
+        윷 또는 모가 나오면 한 번 더 던질 수 있어요!
+      </p>
+    </section>
+
+    <section class="history-card" aria-labelledby="historyTitle">
+      <div class="history-heading">
+        <div>
+          <p class="section-kicker">YOUR LUCK</p>
+          <h2 id="historyTitle">던지기 기록</h2>
+        </div>
+        <button id="resetButton" class="reset-button" type="button">
+          ↻ 처음부터
+        </button>
+      </div>
+
+      <div id="historyList" class="history-list">
+        <p class="empty-history">
+          아직 기록이 없어요. 첫 윷을 던져 보세요! 🌱
+        </p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      🍀 행운은 계속 굴러온다! 즐거운 윷놀이 🍀
+    </footer>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
