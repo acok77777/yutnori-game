@@ -117,7 +117,7 @@ h2 {
 }
 
 .stick.tossing {
-  animation: toss 1.5s cubic-bezier(.2, .65, .3, 1) both;
+  animation: toss 0.75s cubic-bezier(.2, .65, .3, 1) both;
   z-index: 2;
 }
 
