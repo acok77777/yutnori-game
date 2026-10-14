@@ -1,17 +1,339 @@
+```css
+/* =========================
+   기본 설정
+========================= */
+* {
+  box-sizing: border-box;
+}
 
-/* 윷이 날아오르고 떨어지는 움직임 */
+:root {
+  --bg: #fff8ec;
+  --card: #ffffff;
+  --text: #35271d;
+  --muted: #806c59;
+  --wood: #b8783e;
+  --wood-light: #e6b879;
+  --wood-dark: #754321;
+  --accent: #8c4f28;
+  --shadow: 0 10px 28px rgba(91, 57, 25, 0.12);
+}
+
+html {
+  min-height: 100%;
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    "Malgun Gothic", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 50% 0%, #fffdf7 0, transparent 50%),
+    var(--bg);
+}
+
+button {
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app {
+  width: min(100% - 24px, 560px);
+  margin: 0 auto;
+  padding: 16px 0 24px;
+}
+
+/* =========================
+   제목
+========================= */
+.header {
+  text-align: center;
+  padding: 8px 0 18px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: clamp(25px, 6vw, 34px);
+  line-height: 1.3;
+  font-weight: 900;
+  letter-spacing: -1.4px;
+  color: #59371f;
+  text-shadow: 0 2px 0 #f0d8b9;
+}
+
+/* =========================
+   게임 카드
+========================= */
+.game-card {
+  overflow: hidden;
+  padding: 16px;
+  border: 1px solid #f0dfc8;
+  border-radius: 24px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.card-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 17px;
+  font-weight: 800;
+  color: #67452b;
+}
+
+/* =========================
+   윷 던지는 공간
+   기존 화면 크기 유지
+========================= */
+.arena {
+  position: relative;
+  height: clamp(300px, 48svh, 440px);
+  min-height: 300px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #ecd7b8;
+  border-radius: 20px;
+  background:
+    radial-gradient(
+      ellipse at 50% 76%,
+      rgba(255, 255, 255, 0.98) 0,
+      rgba(255, 249, 235, 0.85) 44%,
+      transparent 75%
+    ),
+    linear-gradient(180deg, #fffaf0 0%, #f4dfbd 100%);
+  perspective: 900px;
+}
+
+.arena::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px dashed rgba(160, 113, 64, 0.23);
+  border-radius: 14px;
+  pointer-events: none;
+}
+
+.floor-shadow {
+  position: absolute;
+  left: 50%;
+  top: 66%;
+  width: 76%;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(100, 62, 28, 0.18);
+  filter: blur(18px);
+  transform: translateX(-50%) scale(1);
+  opacity: 0.8;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.yut-set {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  display: grid;
+  grid-template-columns: repeat(2, 86px);
+  gap: 32px 30px;
+  width: max-content;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+}
+
+/* =========================
+   윷 한 개
+========================= */
+.yut-stick {
+  position: relative;
+  width: 86px;
+  height: 25px;
+  border-radius: 7px;
+  transform-style: preserve-3d;
+  perspective: 700px;
+  filter: drop-shadow(0 7px 4px rgba(83, 48, 20, 0.2));
+  will-change: transform;
+}
+
+.yut-3d {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 7px;
+  transform-style: preserve-3d;
+  transition: none;
+}
+
+/* 윷 앞뒤 면 */
+.yut-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #75421f;
+  border-radius: 7px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.yut-front {
+  transform: translateZ(7px);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(99, 54, 22, 0.18),
+      transparent 17%,
+      rgba(255, 231, 187, 0.5) 48%,
+      transparent 76%,
+      rgba(90, 46, 19, 0.18)
+    ),
+    linear-gradient(180deg, #edc58d 0%, #c58b4e 48%, #a86c37 100%);
+}
+
+.yut-back {
+  transform: rotateY(180deg) translateZ(7px);
+  background:
+    linear-gradient(
+      90deg,
+      #6d3c20 0%,
+      #a96c3c 22%,
+      #c28b55 48%,
+      #91552e 76%,
+      #64371d 100%
+    );
+  box-shadow: inset 0 2px 4px rgba(255, 220, 164, 0.25);
+}
+
+/* 나무결 */
+.wood-grain {
+  position: absolute;
+  inset: 2px 5px;
+  border-radius: 5px;
+  opacity: 0.72;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 4px,
+    rgba(111, 63, 28, 0.22) 5px,
+    rgba(255, 224, 171, 0.28) 6px,
+    transparent 8px
+  );
+}
+
+.yut-front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.38),
+    transparent 40%,
+    rgba(87, 48, 19, 0.14)
+  );
+}
+
+/* 점 3개 */
+.dots {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.dots i {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #49316c;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    0 1px 1px rgba(45, 24, 15, 0.25);
+}
+
+/* 윷 옆면 */
+.yut-edge {
+  position: absolute;
+  background: linear-gradient(
+    180deg,
+    #d29b60,
+    #88512b
+  );
+  border: 1px solid #75421f;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.yut-edge-left,
+.yut-edge-right {
+  top: 0;
+  width: 14px;
+  height: 25px;
+  border-radius: 4px;
+}
+
+.yut-edge-left {
+  left: 0;
+  transform: rotateY(-90deg) translateZ(0);
+}
+
+.yut-edge-right {
+  right: 0;
+  transform: rotateY(90deg) translateZ(0);
+}
+
+.yut-edge-top,
+.yut-edge-bottom {
+  left: 0;
+  width: 86px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.yut-edge-top {
+  top: 0;
+  transform: rotateX(90deg) translateZ(0);
+}
+
+.yut-edge-bottom {
+  bottom: 0;
+  transform: rotateX(-90deg) translateZ(0);
+}
+
+.floor-line {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 24px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(153, 104, 55, 0.13);
+}
+
+/* =========================
+   던지기 애니메이션
+========================= */
 .yut-stick.throwing {
   animation: yut-flight 1.5s cubic-bezier(0.2, 0.7, 0.25, 1) both;
   z-index: 10;
 }
 
-/* 던지는 도중 앞뒤·좌우로 입체 회전 */
 .yut-stick.throwing .yut-3d {
   animation: yut-spin 1.5s ease-in-out both;
   transform-style: preserve-3d;
 }
 
-/* 윷이 위로 올라가고 바닥에 튕기는 동작 */
 @keyframes yut-flight {
   0% {
     translate: 0 0;
@@ -54,7 +376,6 @@
   }
 }
 
-/* 회전하면서 점 3개 면과 갈색 면이 자연스럽게 교차 */
 @keyframes yut-spin {
   0% {
     transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
@@ -96,3 +417,163 @@
     transform: rotateX(720deg) rotateY(900deg) rotateZ(420deg);
   }
 }
+
+/* =========================
+   결과 표시
+========================= */
+.result-panel {
+  margin-top: 16px;
+  padding: 15px 10px;
+  text-align: center;
+  border: 1px solid #f0e1cd;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #fffdf9, #fff7eb);
+}
+
+.result-emoji {
+  min-height: 36px;
+  margin-bottom: 4px;
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.result-name {
+  font-size: clamp(22px, 5vw, 28px);
+  line-height: 1.35;
+  font-weight: 900;
+  color: #7c451f;
+  word-break: keep-all;
+}
+
+.result-message {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
+.extra-note {
+  min-height: 0;
+  margin-top: 5px;
+  color: #c05d20;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 900;
+}
+
+.extra-note:not(:empty) {
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: #fff0cf;
+}
+
+/* =========================
+   던지기 버튼
+========================= */
+.throw-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100px;
+  margin-top: 14px;
+  padding: 16px;
+  border: 0;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #a96835, #78421f);
+  color: #ffffff;
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  box-shadow:
+    0 6px 0 #5c3219,
+    0 10px 18px rgba(91, 57, 25, 0.18);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    opacity 0.12s ease;
+}
+
+.throw-button:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 #5c3219,
+    0 5px 10px rgba(91, 57, 25, 0.15);
+}
+
+.throw-button:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}
+
+/* =========================
+   작은 휴대폰 화면
+========================= */
+@media (max-width: 380px) {
+  .app {
+    width: calc(100% - 16px);
+    padding-top: 10px;
+  }
+
+  .game-card {
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .yut-set {
+    grid-template-columns: repeat(2, 76px);
+    gap: 28px 22px;
+  }
+
+  .yut-stick {
+    width: 76px;
+  }
+
+  .yut-edge-top,
+  .yut-edge-bottom {
+    width: 76px;
+  }
+
+  .header h1 {
+    letter-spacing: -1.5px;
+  }
+}
+
+/* =========================
+   화면 높이가 짧은 휴대폰
+========================= */
+@media (max-height: 720px) {
+  .arena {
+    height: 42svh;
+    min-height: 240px;
+  }
+
+  .throw-button {
+    min-height: 75px;
+  }
+
+  .header {
+    padding-bottom: 12px;
+  }
+
+  .result-panel {
+    margin-top: 10px;
+    padding: 10px;
+  }
+}
+
+/* 움직임 줄이기 설정 지원 */
+@media (prefers-reduced-motion: reduce) {
+  .yut-stick.throwing,
+  .yut-stick.throwing .yut-3d {
+    animation-duration: 0.01ms;
+  }
+
+  .throw-button {
+    transition: none;
+  }
+}
+```
