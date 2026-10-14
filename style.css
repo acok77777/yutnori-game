@@ -1,538 +1,188 @@
 
-* {
-  box-sizing: border-box;
-}
+const sticks = Array.from(document.querySelectorAll(".yut-stick"));
+const throwButton = document.getElementById("throwButton");
+const resetButton = document.getElementById("resetButton");
 
-:root {
-  --ink: #493322;
-  --muted: #907b68;
-  --cream: #fff8e9;
-  --paper: #fffdf8;
-  --orange: #ed8441;
-  --line: #f0dfc6;
-}
+const resultEmoji = document.getElementById("resultEmoji");
+const resultName = document.getElementById("resultName");
+const resultMessage = document.getElementById("resultMessage");
+const extraNote = document.getElementById("extraNote");
 
-html {
-  min-height: 100%;
-  background: var(--cream);
-}
+const historyList = document.getElementById("historyList");
+const throwCount = document.getElementById("throwCount");
+const throwHint = document.getElementById("throwHint");
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  color: var(--ink);
-  font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
-  background:
-    radial-gradient(circle at 8% 8%, #ffedbd 0, transparent 35%),
-    var(--cream);
-}
-
-button {
-  font: inherit;
-}
-
-button:focus-visible {
-  outline: 3px solid #6c93d7;
-  outline-offset: 3px;
-}
-
-.app {
-  width: min(100% - 22px, 540px);
-  margin: 0 auto;
-  padding: 8px 0 14px;
-}
-
-.topbar {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  min-height: 43px;
-  margin-bottom: 7px;
-}
-
-.brand-mark {
-  width: 37px;
-  height: 37px;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  border-radius: 12px;
-  background: #ffe6a0;
-  font-size: 22px;
-}
-
-.topbar h1 {
-  flex: 1;
-  margin: 0;
-  font-size: clamp(21px, 5.5vw, 27px);
-  font-weight: 900;
-  letter-spacing: -1px;
-}
-
-.icon-button {
-  width: 37px;
-  height: 37px;
-  flex-shrink: 0;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: white;
-  font-size: 17px;
-  cursor: pointer;
-}
-
-.game-card,
-.history-card {
-  border: 1px solid #f0dfc6;
-  border-radius: 21px;
-  background: var(--paper);
-  box-shadow: 0 7px 22px rgba(113, 73, 35, .07);
-  padding: 12px;
-}
-
-.arena-heading,
-.history-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.arena-heading h2,
-.history-heading h2 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 800;
-}
-
-.turn-counter {
-  padding: 5px 9px;
-  border-radius: 99px;
-  background: #f7f0e4;
-  color: #826b51;
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-/* 윷 던지는 네모 박스: 크게 확대 */
-.arena {
-  position: relative;
-  display: grid;
-  place-items: center;
-  min-height: 270px;
-  margin: 10px 0;
-  overflow: hidden;
-  border: 3px solid #e9b875;
-  border-radius: 22px;
-  background: linear-gradient(145deg, #fff0c9, #fce2b1);
-  box-shadow: inset 0 0 0 6px rgba(255,255,255,.4);
-}
-
-.arena::before {
-  content: "";
-  position: absolute;
-  inset: 10px;
-  border: 1px dashed rgba(169,113,55,.35);
-  border-radius: 14px;
-  pointer-events: none;
-}
-
-.arena-spark {
-  position: absolute;
-  color: #c8944e;
-  font-size: 24px;
-  opacity: .7;
-}
-
-.spark-one {
-  top: 20px;
-  left: 23px;
-}
-
-.spark-two {
-  top: 32px;
-  right: 25px;
-}
-
-/* 윷 4개 */
-.sticks {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(2, 78px);
-  gap: 16px 22px;
-  justify-content: center;
-  transform: rotate(-7deg);
-}
-
-.yut-stick {
-  position: relative;
-  width: 78px;
-  height: 25px;
-  overflow: hidden;
-  border: 2px solid #784522;
-  border-radius: 50% / 60%;
-  background: linear-gradient(180deg, #dca36b, #a96434 52%, #844623);
-  box-shadow: 0 3px 0 #75401f, 0 5px 7px rgba(104,63,28,.18);
-  transition: background .15s;
-}
-
-/* 둥근 면 */
-.yut-stick.face-round {
-  background: linear-gradient(180deg, #e2b17a, #bd7b43 55%, #92552c);
-}
-
-.yut-stick.face-round::before {
-  content: "";
-  position: absolute;
-  inset: 3px 8px;
-  border-top: 2px solid rgba(255,224,172,.75);
-  border-radius: 50%;
-}
-
-.yut-stick.face-round .stick-mark {
-  position: absolute;
-  left: 50%;
-  top: 7px;
-  width: 27px;
-  height: 9px;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: rgba(91,44,20,.4);
-  border: 1px solid rgba(255,220,165,.3);
-}
-
-/* 뒤집힌 밝은 면 */
-.yut-stick.face-flat {
-  background: linear-gradient(180deg, #f9e7bf, #e7c58d 55%, #c89a5c);
-  border-color: #ad7b43;
-}
-
-.yut-stick.face-flat::before {
-  content: "";
-  position: absolute;
-  inset: 3px 7px;
-  border-top: 2px solid rgba(255,255,255,.8);
-  border-radius: 50%;
-}
-
-.yut-stick.face-flat .stick-mark {
-  position: absolute;
-  top: 9px;
-  left: 50%;
-  width: 5px;
-  height: 5px;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: #8e5c30;
-  box-shadow: -12px 0 #8e5c30, 12px 0 #8e5c30;
-}
-
-/* 던지는 애니메이션 */
-.arena.is-rolling .yut-stick {
-  animation: tumble .18s ease-in-out infinite alternate;
-}
-
-.arena.is-rolling .yut-stick:nth-child(2) {
-  animation-delay: -.06s;
-}
-
-.arena.is-rolling .yut-stick:nth-child(3) {
-  animation-delay: -.12s;
-}
-
-.arena.is-rolling .yut-stick:nth-child(4) {
-  animation-delay: -.09s;
-}
-
-@keyframes tumble {
-  from {
-    translate: -9px -9px;
-    rotate: -25deg;
+const outcomes = {
+  0: {
+    name: "모",
+    emoji: "🎉",
+    steps: 5,
+    extra: true,
+    message: "모! 다섯 칸 이동하고 한 번 더 던져요!"
+  },
+  1: {
+    name: "도",
+    emoji: "🍀",
+    steps: 1,
+    extra: false,
+    message: "도! 한 칸 이동하세요."
+  },
+  2: {
+    name: "개",
+    emoji: "🌟",
+    steps: 2,
+    extra: false,
+    message: "개! 두 칸 이동하세요."
+  },
+  3: {
+    name: "걸",
+    emoji: "✨",
+    steps: 3,
+    extra: false,
+    message: "걸! 세 칸 이동하세요."
+  },
+  4: {
+    name: "윷",
+    emoji: "🎊",
+    steps: 4,
+    extra: true,
+    message: "윷! 네 칸 이동하고 한 번 더 던져요!"
   }
-  to {
-    translate: 9px 9px;
-    rotate: 35deg;
-  }
+};
+
+let totalThrows = 0;
+let isThrowing = false;
+let animationTimers = [];
+
+function clearAnimationTimers() {
+  animationTimers.forEach(clearTimeout);
+  animationTimers = [];
 }
 
-.throw-hint {
-  position: absolute;
-  z-index: 2;
-  bottom: 10px;
-  color: #9a744a;
-  font-size: 11px;
-  font-weight: bold;
+function setStickFace(stick, flipped) {
+  stick.classList.remove("face-dots", "face-brown", "throwing");
+
+  stick.classList.add(flipped ? "face-brown" : "face-dots");
+
+  stick.style.removeProperty("translate");
+  stick.style.removeProperty("rotate");
+  stick.style.removeProperty("scale");
 }
 
-/* 결과 표시 */
-.result-panel {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  min-height: 68px;
-  padding: 8px 10px;
-  border: 1px solid #f3e4cc;
-  border-radius: 15px;
-  background: #fffaf0;
+function showOutcome(flippedCount) {
+  const outcome = outcomes[flippedCount];
+
+  resultEmoji.textContent = outcome.emoji;
+  resultName.textContent = `${outcome.name} (${flippedCount}개 뒤집힘)`;
+  resultMessage.textContent = outcome.message;
+
+  extraNote.textContent = outcome.extra
+    ? "🎉 한 번 더 던질 수 있어요!"
+    : "";
+
+  throwHint.textContent = `${outcome.name}! ${outcome.steps}칸 이동`;
+
+  addHistory(outcome, flippedCount);
 }
 
-.result-emoji {
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  flex-shrink: 0;
-  border-radius: 14px;
-  background: #ffedc2;
-  font-size: 27px;
-}
+function addHistory(outcome, flippedCount) {
+  totalThrows += 1;
+  throwCount.textContent = `총 ${totalThrows}회`;
 
-.result-copy {
-  min-width: 0;
-}
-
-.result-label {
-  margin: 0 0 2px;
-  color: #ad8c68;
-  font-size: 10px;
-}
-
-.result-copy h2 {
-  margin: 0 0 3px;
-  font-size: 20px;
-  font-weight: 900;
-}
-
-.result-message {
-  margin: 0;
-  color: #826b51;
-  font-size: 12px;
-  line-height: 1.4;
-  overflow-wrap: anywhere;
-}
-
-.result-panel.pop {
-  animation: pop-in .3s ease-out;
-}
-
-@keyframes pop-in {
-  0% { transform: scale(.97); }
-  70% { transform: scale(1.02); }
-  100% { transform: scale(1); }
-}
-
-/* 윷 던지기 버튼 */
-.throw-button {
-  display: block;
-  width: 100%;
-  min-height: 52px;
-  margin-top: 10px;
-  padding: 11px 14px;
-  border: 0;
-  border-radius: 15px;
-  color: white;
-  background: linear-gradient(135deg, #f49a51, #e9783d);
-  box-shadow: 0 4px 0 #c85e2e;
-  font-size: 22px;
-  font-weight: 900;
-  cursor: pointer;
-  transition: transform .1s, opacity .1s;
-}
-
-.throw-button:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 #c85e2e;
-}
-
-.throw-button:disabled {
-  cursor: wait;
-  opacity: .7;
-}
-
-.extra-turn-note {
-  margin: 8px 0 0;
-  color: #a18a71;
-  text-align: center;
-  font-size: 11px;
-}
-
-/* 기록 */
-.history-card {
-  margin-top: 9px;
-  padding: 11px 12px;
-}
-
-.reset-button {
-  padding: 6px 9px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: #fffaf0;
-  color: #8b6c4a;
-  font-size: 11px;
-  cursor: pointer;
-}
-
-.history-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  max-height: 65px;
-  overflow-y: auto;
-  margin-top: 8px;
-}
-
-.empty-history {
-  margin: 0;
-  padding: 6px 0;
-  color: #a18a71;
-  font-size: 12px;
-}
-
-.history-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 8px;
-  border: 1px solid #f0dfc6;
-  border-radius: 9px;
-  background: #fff9ed;
-  color: #72553a;
-  font-size: 12px;
-}
-
-.history-chip strong {
-  color: #d86d35;
-}
-
-.chip-index {
-  color: #b09a80;
-  font-size: 10px;
-}
-
-/* 알림 */
-.toast {
-  position: fixed;
-  left: 50%;
-  bottom: max(12px, env(safe-area-inset-bottom));
-  z-index: 10;
-  max-width: calc(100vw - 24px);
-  padding: 10px 14px;
-  border-radius: 12px;
-  color: white;
-  background: #5b422e;
-  font-size: 13px;
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, 10px);
-  transition: opacity .2s, transform .2s;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translate(-50%, 0);
-}
-
-/* 작은 휴대폰 */
-@media (max-width: 390px) {
-  .app {
-    width: calc(100% - 16px);
-    padding-top: 5px;
+  const emptyItem = historyList.querySelector(".empty-history");
+  if (emptyItem) {
+    emptyItem.remove();
   }
 
-  .topbar {
-    min-height: 38px;
-    margin-bottom: 5px;
-  }
+  const item = document.createElement("li");
 
-  .brand-mark,
-  .icon-button {
-    width: 33px;
-    height: 33px;
-  }
+  const left = document.createElement("span");
+  left.className = "history-result";
+  left.textContent = `${totalThrows}. ${outcome.emoji} ${outcome.name}`;
 
-  .game-card {
-    padding: 9px;
-  }
+  const right = document.createElement("span");
+  right.className = "history-detail";
+  right.textContent = `${outcome.steps}칸 · 갈색 ${flippedCount}개`;
 
-  .arena {
-    min-height: 230px;
-    margin: 7px 0;
-  }
-
-  .sticks {
-    grid-template-columns: repeat(2, 68px);
-    gap: 13px 17px;
-  }
-
-  .yut-stick {
-    width: 68px;
-    height: 22px;
-  }
-
-  .yut-stick.face-flat .stick-mark {
-    top: 8px;
-  }
-
-  .yut-stick.face-round .stick-mark {
-    top: 6px;
-  }
-
-  .result-panel {
-    min-height: 61px;
-    padding: 6px 8px;
-  }
-
-  .result-emoji {
-    width: 43px;
-    height: 43px;
-    font-size: 24px;
-  }
-
-  .result-copy h2 {
-    font-size: 18px;
-  }
-
-  .throw-button {
-    min-height: 48px;
-    margin-top: 8px;
-    font-size: 20px;
-  }
-
-  .history-list {
-    max-height: 45px;
-  }
+  item.append(left, right);
+  historyList.prepend(item);
 }
 
-/* 높이가 낮은 화면 */
-@media (max-height: 700px) {
-  .app {
-    padding-top: 4px;
-  }
+function tossYuts() {
+  if (isThrowing) return;
 
-  .arena {
-    min-height: 200px;
-  }
+  isThrowing = true;
+  throwButton.disabled = true;
+  throwButton.textContent = "🪵 윷이 떨어지는 중...";
 
-  .game-card {
-    padding: 9px;
-  }
+  extraNote.textContent = "";
+  throwHint.textContent = "빙글빙글! 윷이 떨어집니다!";
+  resultEmoji.textContent = "🎲";
+  resultName.textContent = "윷 던지는 중...";
+  resultMessage.textContent = "윷이 바닥에 닿을 때까지 기다려 주세요.";
 
-  .history-card {
-    margin-top: 6px;
-    padding: 8px 10px;
-  }
+  clearAnimationTimers();
 
-  .history-list {
-    max-height: 38px;
-  }
+  // true는 갈색 면, false는 점 3개 면
+  const results = sticks.map(() => Math.random() < 0.5);
+
+  sticks.forEach((stick, index) => {
+    stick.classList.remove("throwing");
+    setStickFace(stick, false);
+
+    // 브라우저가 초기 상태를 적용하도록 함
+    void stick.offsetWidth;
+
+    const timer = setTimeout(() => {
+      stick.classList.add("throwing");
+    }, index * 75);
+
+    animationTimers.push(timer);
+  });
+
+  const finishTimer = setTimeout(() => {
+    let flippedCount = 0;
+
+    sticks.forEach((stick, index) => {
+      stick.classList.remove("throwing");
+      setStickFace(stick, results[index]);
+
+      if (results[index]) {
+        flippedCount += 1;
+      }
+    });
+
+    showOutcome(flippedCount);
+
+    isThrowing = false;
+    throwButton.disabled = false;
+    throwButton.textContent = "🎲 윷 던지기";
+  }, 1550);
+
+  animationTimers.push(finishTimer);
 }
 
-/* 애니메이션 줄이기 설정 */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: .01ms !important;
-    transition-duration: .01ms !important;
-  }
+function resetGame() {
+  if (isThrowing) return;
+
+  totalThrows = 0;
+  throwCount.textContent = "총 0회";
+  historyList.innerHTML =
+    '<li class="empty-history">아직 던진 기록이 없어요.</li>';
+
+  resultEmoji.textContent = "🍀";
+  resultName.textContent = "준비됐나요?";
+  resultMessage.textContent = "아래 버튼을 눌러 윷을 던져 보세요.";
+  extraNote.textContent = "";
+  throwHint.textContent = "윷을 던져 보세요!";
+
+  sticks.forEach((stick) => {
+    setStickFace(stick, false);
+  });
+
+  throwButton.disabled = false;
+  throwButton.textContent = "🎲 윷 던지기";
 }
+
+throwButton.addEventListener("click", tossYuts);
+resetButton.addEventListener("click", resetGame);
