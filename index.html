@@ -3,39 +3,48 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#fff4df">
-  <title>신나는 윷 던지기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>신나는 윷놀이</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="app">
-    <h1>🎲 신나는 윷 던지기</h1>
+  <main class="game">
+    <header class="header">
+      <div class="subtitle">TRADITIONAL KOREAN GAME</div>
+      <h1>🪵 신나는 윷놀이</h1>
+      <p>윷을 던져서 어디가 나올지 확인해 보세요!</p>
+    </header>
 
-    <section class="game-card">
-      <h2>🪵 윷 던지는 곳</h2>
-
-      <div class="arena" id="arena">
-        <div class="shadow"></div>
-        <div class="sticks" id="sticks">
-          <div class="stick"><span class="dots">●　●　●</span></div>
-          <div class="stick"><span class="dots">●　●　●</span></div>
-          <div class="stick"><span class="dots">●　●　●</span></div>
-          <div class="stick"><span class="dots">●　●　●</span></div>
+    <section class="arena" aria-label="윷 던지는 곳">
+      <div class="sticks" id="sticks">
+        <div class="stick" aria-label="첫 번째 윷">
+          <span class="dots">●　●</span>
         </div>
-        <div class="ground"></div>
+        <div class="stick flipped" aria-label="두 번째 윷">
+          <span class="dots">●　●</span>
+        </div>
+        <div class="stick" aria-label="세 번째 윷">
+          <span class="dots">●　●</span>
+        </div>
+        <div class="stick flipped" aria-label="네 번째 윷">
+          <span class="dots">●　●</span>
+        </div>
       </div>
-
-      <div class="result" aria-live="polite">
-        <div id="emoji">🍀</div>
-        <div id="name">준비됐나요?</div>
-        <p id="message">버튼을 눌러 윷을 던지세요!</p>
-        <p id="extra"></p>
-      </div>
-
-      <button id="throwButton">🎲 윷 던지기</button>
+      <p class="arena-caption">윷을 던져 보세요!</p>
     </section>
+
+    <section class="result" aria-live="polite">
+      <div class="result-emoji" id="emoji">🎲</div>
+      <h2 id="name">준비됐나요?</h2>
+      <p id="message">아래 버튼을 눌러 윷을 던져 보세요.</p>
+      <p class="extra" id="extra"></p>
+    </section>
+
+    <button id="throwButton" type="button">🎲 윷 던지기</button>
+
+    <p class="rule">도 1칸 · 개 2칸 · 걸 3칸 · 윷 4칸 · 모 5칸</p>
   </main>
+
   <script src="script.js"></script>
 </body>
 </html>
