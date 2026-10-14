@@ -85,8 +85,9 @@ function tossYuts() {
       const flipped = results[index];
 
 // 애니메이션 마지막 프레임을 유지해 갑작스러운 변화를 방지합니다.
-body.style.animationPlayState = "paused";
-stick.style.animationPlayState = "paused";
+body.style.animation = "none";
+body.style.animationPlayState = "running";
+stick.style.animationPlayState = "running";
     });
 
     resultEmoji.textContent = outcome.emoji;
