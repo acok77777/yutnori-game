@@ -77,3 +77,5 @@ function tossYuts() {
 }
 
 button.addEventListener("click", tossYuts);
+
+console.log("윷 게임 스크립트가 실행됐어요!");
