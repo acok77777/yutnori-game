@@ -1,67 +1,143 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#fff4d8">
-  <meta name="description" content="도 개 걸 윷 모! 신나는 한국 전통 윷놀이 게임">
+
   <title>신나는 윷놀이 🎲</title>
+  <meta name="description" content="도·개·걸·윷·모! 신나는 윷놀이 게임. 오늘의 행운을 던져 보세요!">
+
+  <!-- 카카오톡 및 SNS 링크 공유 미리보기 -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="신나는 윷놀이">
+  <meta property="og:title" content="🎲 신나는 윷놀이">
+  <meta property="og:description" content="도·개·걸·윷·모! 🎉 윷을 던지고 오늘의 행운을 확인해 보세요!">
+  <meta property="og:url" content="https://acok77777.github.io/yutnori-game/">
+  <meta property="og:image" content="https://acok77777.github.io/yutnori-game/yut-preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:locale" content="ko_KR">
+
+  <!-- 기타 SNS 공유 -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="🎲 신나는 윷놀이">
+  <meta name="twitter:description" content="도·개·걸·윷·모! 신나는 윷놀이를 즐겨 보세요!">
+  <meta name="twitter:image" content="https://acok77777.github.io/yutnori-game/yut-preview.png">
+
+  <!-- 게임 디자인과 동작 -->
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
 </head>
+
 <body>
   <main class="app">
+
+    <!-- 상단 제목 -->
     <header class="topbar">
       <div class="brand-mark">🎲</div>
+
       <div class="brand-copy">
         <p class="eyebrow">우리 함께 놀아요</p>
         <h1>신나는 윷놀이</h1>
       </div>
-      <button id="soundToggle" class="icon-button" type="button"
-        aria-pressed="true" aria-label="효과음 끄기">🔊</button>
+
+      <button
+        id="soundToggle"
+        class="icon-button"
+        type="button"
+        aria-pressed="true"
+        aria-label="효과음 끄기"
+      >🔊</button>
     </header>
 
+    <!-- 게임 소개 -->
     <section class="intro">
       <span class="pill">🌈 오늘의 행운을 던져 봐!</span>
       <p>윷을 던지고 어떤 결과가 나올지 확인해 보세요.</p>
     </section>
 
+    <!-- 윷 던지기 게임 -->
     <section class="game-card">
+
       <div class="arena-heading">
         <div>
           <p class="section-kicker">YUT THROW</p>
           <h2>윷 던지는 곳</h2>
         </div>
-        <span id="turnCount" class="turn-counter">0회 던짐</span>
+
+        <span id="turnCount" class="turn-counter">
+          0회 던짐
+        </span>
       </div>
 
-      <div id="arena" class="arena" aria-label="윷 던지는 공간">
+      <!-- 가운데 네모 윷 공간 -->
+      <div
+        id="arena"
+        class="arena"
+        aria-label="윷 던지는 공간"
+      >
         <div class="arena-spark spark-one">✦</div>
         <div class="arena-spark spark-two">✧</div>
         <div class="arena-spark spark-three">✦</div>
 
+        <!-- 윷 4개 -->
         <div class="sticks" id="sticks">
-          <div class="yut-stick face-flat" data-stick="0"><span class="stick-mark"></span></div>
-          <div class="yut-stick face-round" data-stick="1"><span class="stick-mark"></span></div>
-          <div class="yut-stick face-flat" data-stick="2"><span class="stick-mark"></span></div>
-          <div class="yut-stick face-round" data-stick="3"><span class="stick-mark"></span></div>
+
+          <div class="yut-stick face-flat" data-stick="0">
+            <span class="stick-mark"></span>
+          </div>
+
+          <div class="yut-stick face-round" data-stick="1">
+            <span class="stick-mark"></span>
+          </div>
+
+          <div class="yut-stick face-flat" data-stick="2">
+            <span class="stick-mark"></span>
+          </div>
+
+          <div class="yut-stick face-round" data-stick="3">
+            <span class="stick-mark"></span>
+          </div>
+
         </div>
 
-        <div id="throwHint" class="throw-hint">윷을 던질 준비 완료!</div>
+        <div id="throwHint" class="throw-hint">
+          윷을 던질 준비 완료!
+        </div>
       </div>
 
-      <div class="result-panel" aria-live="polite" aria-atomic="true">
-        <div id="resultEmoji" class="result-emoji">🍀</div>
+      <!-- 결과 표시 -->
+      <div
+        class="result-panel"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <div id="resultEmoji" class="result-emoji">
+          🍀
+        </div>
+
         <div class="result-copy">
           <p class="result-label">이번 결과</p>
-          <h2 id="resultName">어떤 결과가 나올까요?</h2>
+
+          <h2 id="resultName">
+            어떤 결과가 나올까요?
+          </h2>
+
           <p id="resultMessage" class="result-message">
             아래 버튼을 눌러 윷을 던져 보세요!
           </p>
         </div>
       </div>
 
-      <button id="throwButton" class="throw-button" type="button">
+      <!-- 윷 던지기 버튼 -->
+      <button
+        id="throwButton"
+        class="throw-button"
+        type="button"
+      >
         <span class="button-icon">🎲</span>
         <span id="throwButtonText">윷 던지기!</span>
         <span class="button-arrow">➜</span>
@@ -70,15 +146,25 @@
       <p class="extra-turn-note" id="extraTurnNote">
         윷 또는 모가 나오면 한 번 더 던질 수 있어요!
       </p>
+
     </section>
 
-    <section class="history-card" aria-labelledby="historyTitle">
+    <!-- 던지기 기록 -->
+    <section
+      class="history-card"
+      aria-labelledby="historyTitle"
+    >
       <div class="history-heading">
         <div>
           <p class="section-kicker">YOUR LUCK</p>
           <h2 id="historyTitle">던지기 기록</h2>
         </div>
-        <button id="resetButton" class="reset-button" type="button">
+
+        <button
+          id="resetButton"
+          class="reset-button"
+          type="button"
+        >
           ↻ 처음부터
         </button>
       </div>
@@ -90,11 +176,20 @@
       </div>
     </section>
 
+    <!-- 하단 -->
     <footer class="footer">
       🍀 행운은 계속 굴러온다! 즐거운 윷놀이 🍀
     </footer>
+
   </main>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <!-- 알림 메시지 -->
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+  ></div>
+
 </body>
 </html>
