@@ -13,36 +13,36 @@ const outcomes = {
     emoji: "🎉",
     steps: 5,
     extra: true,
-    message: "5칸 이동 · 한 번 더 던지기!"
+    message: "5칸 이동",
   },
   1: {
     name: "도",
     emoji: "🍀",
     steps: 1,
     extra: false,
-    message: "1칸 이동"
+    message: "1칸 이동",
   },
   2: {
     name: "개",
     emoji: "🌟",
     steps: 2,
     extra: false,
-    message: "2칸 이동"
+    message: "2칸 이동",
   },
   3: {
     name: "걸",
     emoji: "✨",
     steps: 3,
     extra: false,
-    message: "3칸 이동"
+    message: "3칸 이동",
   },
   4: {
     name: "윷",
     emoji: "🎊",
     steps: 4,
     extra: true,
-    message: "4칸 이동 · 한 번 더 던지기!"
-  }
+    message: "4칸 이동",
+  },
 };
 
 let isThrowing = false;
@@ -76,7 +76,7 @@ function tossYuts() {
 
   clearAnimationTimers();
 
-  // true = 갈색으로 뒤집힘, false = 점 3개 면
+  // 갈색 면이 나오면 뒤집힌 윷으로 계산
   const results = sticks.map(() => Math.random() < 0.5);
 
   sticks.forEach((stick, index) => {
@@ -108,12 +108,11 @@ function tossYuts() {
     const outcome = outcomes[flippedCount];
 
     resultEmoji.textContent = outcome.emoji;
-    resultName.textContent =
-      `${outcome.name} (${flippedCount}개 뒤집힘)`;
+    resultName.textContent = `${outcome.name} (${outcome.steps}칸 이동)`;
     resultMessage.textContent = outcome.message;
 
     extraNote.textContent = outcome.extra
-      ? "🎉 한 번 더 던질 수 있어요!"
+      ? "🎉 한 번 더 던지세요!"
       : "";
 
     throwButton.disabled = false;
