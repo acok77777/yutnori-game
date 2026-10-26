@@ -18,11 +18,12 @@ function clearTimers() {
   timers = [];
 }
 
+// 윷 결과 판정
 function getOutcome(results) {
   // true = 뒷면, false = 앞면
   const backCount = results.filter(Boolean).length;
 
-  // 별 표시 윷만 뒷면이면 백도
+  // 별 표시 윷 하나만 뒷면이면 백도
   if (backCount === 1 && results[STAR_INDEX] === true) {
     return {
       name: "백도",
@@ -68,6 +69,7 @@ function getOutcome(results) {
   return outcomes[backCount];
 }
 
+// 윷의 앞면과 뒷면 표시
 function updateStickFace(stick, isBack, isStar) {
   const dots = stick.querySelector(".dots");
 
@@ -88,6 +90,7 @@ function updateStickFace(stick, isBack, isStar) {
   }
 }
 
+// 윷 던지기
 function tossYuts() {
   if (busy) return;
 
@@ -111,10 +114,9 @@ function tossYuts() {
   // true = 뒷면, false = 앞면
   const results = sticks.map(() => Math.random() < 0.5);
 
-  // 윷의 표시를 초기화하고 애니메이션 실행
+  // 윷의 표시 초기화
   sticks.forEach((stick, i) => {
     stick.classList.remove("tossing", "flipped");
-
     stick.querySelector(".dots").textContent = "● ●";
 
     stick.setAttribute(
@@ -125,6 +127,7 @@ function tossYuts() {
     void stick.offsetWidth;
   });
 
+  // 윷을 차례대로 던지는 애니메이션
   sticks.forEach((stick, i) => {
     const startTimer = setTimeout(() => {
       stick.classList.add("tossing");
@@ -157,13 +160,13 @@ function tossYuts() {
       // 백도
       name.textContent = "백도 (뒤로)";
       message.textContent = "뒤로 1칸 이동하세요!";
-      arenaCaption.textContent = "백도! 한 칸 뒤로 이동합니다.";
+      arenaCaption.textContent = "백도 (뒤로) 이동합니다.";
     } else {
       // 도, 개, 걸, 윷, 모
       name.textContent = `${result.name} (${result.steps}칸)`;
-      message.textContent = `${result.steps}칸 이동하세요!`;
+      message.textContent = `앞으로 ${result.steps}칸 이동하세요!`;
       arenaCaption.textContent =
-        `${result.name}! ${result.steps}칸 이동합니다.`;
+        `${result.name} (${result.steps}칸) 이동합니다.`;
     }
 
     extra.textContent = result.extra
