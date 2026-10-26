@@ -1,36 +1,133 @@
 
-<div class="rule-item">
-  <span class="rule-symbol">●</span>
-  <span class="rule-name">도 (1칸)</span>
-  <span class="rule-desc">뒷면 1개</span>
-</div>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fff5df">
 
-<div class="rule-item">
-  <span class="rule-symbol">● ●</span>
-  <span class="rule-name">개 (2칸)</span>
-  <span class="rule-desc">뒷면 2개</span>
-</div>
+  <title>신나는 윷놀이</title>
+  <meta name="description" content="윷을 던지고 도·개·걸·윷·모·백도 결과를 확인해 보세요! 온 가족이 함께 즐기는 신나는 윷놀이 게임입니다.">
 
-<div class="rule-item">
-  <span class="rule-symbol">● ● ●</span>
-  <span class="rule-name">걸 (3칸)</span>
-  <span class="rule-desc">뒷면 3개</span>
-</div>
+  <!-- 브라우저 및 홈 화면 아이콘 -->
+  <link rel="icon" type="image/png" href="./yut-preview.png">
+  <link rel="apple-touch-icon" href="./yut-preview.png">
 
-<div class="rule-item">
-  <span class="rule-symbol">● ● ● ●</span>
-  <span class="rule-name">윷 (4칸)</span>
-  <span class="rule-desc">뒷면 4개</span>
-</div>
+  <!-- 링크 공유 미리보기 -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="신나는 윷놀이">
+  <meta property="og:title" content="🪵 신나는 윷놀이">
+  <meta property="og:description" content="윷을 던지고 도·개·걸·윷·모·백도 결과를 확인해 보세요!">
+  <meta property="og:image" content="https://acok77777.github.io/yutnori-game/yut-preview.png">
+  <meta property="og:image:alt" content="신나는 윷놀이 게임 미리보기">
+  <meta property="og:url" content="https://acok77777.github.io/yutnori-game/">
 
-<div class="rule-item">
-  <span class="rule-symbol">○ ○ ○ ○</span>
-  <span class="rule-name">모 (5칸)</span>
-  <span class="rule-desc">앞면 4개</span>
-</div>
+  <!-- SNS 링크 미리보기 -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="신나는 윷놀이">
+  <meta name="twitter:description" content="윷을 던져 도·개·걸·윷·모·백도 결과를 확인해 보세요!">
+  <meta name="twitter:image" content="https://acok77777.github.io/yutnori-game/yut-preview.png">
 
-<div class="rule-item baekdo-rule">
-  <span class="rule-symbol">★</span>
-  <span class="rule-name">백도 (뒤 1칸)</span>
-  <span class="rule-desc">별 윷만 뒷면</span>
-</div>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <main class="game">
+
+    <header class="header">
+      <div class="subtitle">TRADITIONAL KOREAN GAME</div>
+      <h1>🪵 신나는 윷놀이</h1>
+      <p>윷을 던져서 어디가 나올지 확인해 보세요!</p>
+    </header>
+
+    <section class="arena" aria-label="윷 던지는 곳">
+      <div class="sticks" id="sticks">
+
+        <div class="stick" aria-label="첫 번째 윷">
+          <span class="dots">● ●</span>
+        </div>
+
+        <div class="stick star-stick" aria-label="별 표시 윷">
+          <span class="dots">● ●</span>
+        </div>
+
+        <div class="stick" aria-label="세 번째 윷">
+          <span class="dots">● ●</span>
+        </div>
+
+        <div class="stick" aria-label="네 번째 윷">
+          <span class="dots">● ●</span>
+        </div>
+
+      </div>
+
+      <p class="arena-caption" id="arenaCaption">
+        윷을 던져 보세요!
+      </p>
+    </section>
+
+    <section class="result" aria-live="polite">
+      <div class="result-emoji" id="emoji">🎲</div>
+      <h2 id="name">준비됐나요?</h2>
+      <p id="message">아래 버튼을 눌러 윷을 던져 보세요.</p>
+      <p class="extra" id="extra"></p>
+    </section>
+
+    <button id="throwButton" type="button">
+      🎲 윷 던지기
+    </button>
+
+    <section class="rules" aria-label="윷놀이 결과 안내">
+      <h3>📜 윷놀이 결과 안내</h3>
+
+      <div class="rule-list">
+
+        <div class="rule-item">
+          <span class="rule-symbol">●</span>
+          <span class="rule-name">도 (1칸)</span>
+          <span class="rule-desc">뒷면 1개</span>
+        </div>
+
+        <div class="rule-item">
+          <span class="rule-symbol">● ●</span>
+          <span class="rule-name">개 (2칸)</span>
+          <span class="rule-desc">뒷면 2개</span>
+        </div>
+
+        <div class="rule-item">
+          <span class="rule-symbol">● ● ●</span>
+          <span class="rule-name">걸 (3칸)</span>
+          <span class="rule-desc">뒷면 3개</span>
+        </div>
+
+        <div class="rule-item">
+          <span class="rule-symbol">● ● ● ●</span>
+          <span class="rule-name">윷 (4칸)</span>
+          <span class="rule-desc">뒷면 4개</span>
+        </div>
+
+        <div class="rule-item">
+          <span class="rule-symbol">○ ○ ○ ○</span>
+          <span class="rule-name">모 (5칸)</span>
+          <span class="rule-desc">앞면 4개</span>
+        </div>
+
+        <div class="rule-item baekdo-rule">
+          <span class="rule-symbol">★</span>
+          <span class="rule-name">백도 (뒤 1칸)</span>
+          <span class="rule-desc">별 윷만 뒷면</span>
+        </div>
+
+      </div>
+
+      <p class="rule-note">
+        ※ 별 표시 윷만 단독으로 뒷면일 때 백도로 판정합니다.
+      </p>
+    </section>
+
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>
