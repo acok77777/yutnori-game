@@ -121,9 +121,14 @@ h1 {
 }
 
 .dots {
-  font-size: 13px;
-  letter-spacing: 0;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 2px;
   white-space: nowrap;
+}
+
+.stick.flipped .dots {
+  font-size: 16px;
 }
 
 .stick.tossing {
@@ -161,6 +166,7 @@ h1 {
   color: #76502d;
   font-size: 13px;
   font-weight: 700;
+  line-height: 1.5;
 }
 
 .result {
@@ -182,6 +188,7 @@ h1 {
   margin: 6px 0;
   color: #7c6956;
   font-size: 14px;
+  line-height: 1.5;
 }
 
 .result .extra {
@@ -218,28 +225,113 @@ h1 {
   cursor: wait;
 }
 
-.rule {
-  margin: 20px 0 0;
-  color: #9b8268;
+.rules {
+  margin-top: 24px;
+  padding: 16px 12px;
+  background: #fff7e9;
+  border: 1px solid #ead7b8;
+  border-radius: 16px;
+  text-align: left;
+}
+
+.rules h3 {
+  margin: 0 0 14px;
+  color: #704421;
+  font-size: 16px;
+  text-align: center;
+}
+
+.rule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rule-item {
+  display: grid;
+  grid-template-columns: 58px 48px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 8px;
+  background: #fffdf8;
+  border: 1px solid #f0e2cb;
+  border-radius: 9px;
+}
+
+.rule-symbol {
+  color: #8c5a32;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.rule-name {
+  color: #704421;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.rule-desc {
+  color: #806b55;
   font-size: 12px;
+  line-height: 1.5;
+}
+
+.baekdo-rule {
+  background: #fff0d8;
+  border-color: #e7c38d;
+}
+
+.baekdo-rule .rule-symbol {
+  color: #bd5b20;
+  font-size: 19px;
+}
+
+.baekdo-rule .rule-name {
+  color: #a34d1e;
+}
+
+.rule-note {
+  margin: 12px 0 0;
+  color: #917b62;
+  font-size: 11px;
   line-height: 1.6;
 }
 
 @media (max-width: 420px) {
   body {
     padding: 12px 8px;
+    align-items: flex-start;
   }
 
   .game {
     padding: 22px 14px;
+    border-radius: 20px;
+  }
+
+  .header {
+    margin-bottom: 20px;
+  }
+
+  .subtitle {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+  }
+
+  .header p {
+    font-size: 13px;
   }
 
   .arena {
-    min-height: 220px;
+    min-height: 210px;
+    padding: 22px 8px 16px;
   }
 
   .sticks {
-    gap: 12px 8px;
+    gap: 14px 8px;
+    min-height: 100px;
   }
 
   .stick {
@@ -248,8 +340,40 @@ h1 {
     flex-basis: 94px;
   }
 
+  .dots {
+    font-size: 15px;
+  }
+
+  .arena-caption {
+    margin-top: 22px;
+  }
+
   .result {
     min-height: 165px;
+    padding-top: 18px;
+  }
+
+  .result h2 {
+    font-size: 25px;
+  }
+
+  #throwButton {
+    min-height: 54px;
+    font-size: 17px;
+  }
+
+  .rules {
+    padding: 14px 8px;
+  }
+
+  .rule-item {
+    grid-template-columns: 48px 40px minmax(0, 1fr);
+    gap: 4px;
+    padding: 6px 5px;
+  }
+
+  .rule-desc {
+    font-size: 11px;
   }
 }
 
