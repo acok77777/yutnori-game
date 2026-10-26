@@ -22,11 +22,8 @@ function getOutcome(results) {
   // true = 뒷면, false = 앞면
   const backCount = results.filter(Boolean).length;
 
-  // 별 표시 윷만 뒷면인 경우 백도
-  if (
-    backCount === 1 &&
-    results[STAR_INDEX] === true
-  ) {
+  // 별 표시 윷만 뒷면이면 백도
+  if (backCount === 1 && results[STAR_INDEX] === true) {
     return {
       name: "백도",
       emoji: "⭐",
@@ -35,7 +32,6 @@ function getOutcome(results) {
     };
   }
 
-  // 뒷면 개수에 따른 결과
   const outcomes = {
     0: {
       name: "모",
@@ -79,23 +75,15 @@ function updateStickFace(stick, isBack, isStar) {
 
   if (isBack && isStar) {
     dots.textContent = "★";
-    stick.setAttribute(
-      "aria-label",
-      "별 표시 윷: 뒷면"
-    );
+    stick.setAttribute("aria-label", "별 표시 윷: 뒷면");
   } else if (isBack) {
     dots.textContent = "● ●";
-    stick.setAttribute(
-      "aria-label",
-      "일반 윷: 뒷면"
-    );
+    stick.setAttribute("aria-label", "일반 윷: 뒷면");
   } else {
     dots.textContent = "● ●";
     stick.setAttribute(
       "aria-label",
-      isStar
-        ? "별 표시 윷: 앞면"
-        : "일반 윷: 앞면"
+      isStar ? "별 표시 윷: 앞면" : "일반 윷: 앞면"
     );
   }
 }
@@ -120,15 +108,14 @@ function tossYuts() {
 
   clearTimers();
 
-  // 네 개의 윷 결과를 각각 무작위로 결정
+  // true = 뒷면, false = 앞면
   const results = sticks.map(() => Math.random() < 0.5);
 
-  // 애니메이션을 시작하기 전에 이전 상태 초기화
+  // 윷의 표시를 초기화하고 애니메이션 실행
   sticks.forEach((stick, i) => {
     stick.classList.remove("tossing", "flipped");
 
-    const dots = stick.querySelector(".dots");
-    dots.textContent = "● ●";
+    stick.querySelector(".dots").textContent = "● ●";
 
     stick.setAttribute(
       "aria-label",
@@ -138,7 +125,6 @@ function tossYuts() {
     void stick.offsetWidth;
   });
 
-  // 각 윷을 순서대로 던지는 애니메이션
   sticks.forEach((stick, i) => {
     const startTimer = setTimeout(() => {
       stick.classList.add("tossing");
@@ -159,20 +145,23 @@ function tossYuts() {
 
   const result = getOutcome(results);
 
-  // 모든 윷의 애니메이션이 끝나면 결과 표시
+  // 애니메이션 종료 후 결과 표시
   const finishTimer = setTimeout(() => {
     sticks.forEach(stick => {
       stick.classList.remove("tossing");
     });
 
     emoji.textContent = result.emoji;
-    name.textContent = result.name;
 
     if (result.steps === -1) {
+      // 백도
+      name.textContent = "백도 (뒤로)";
       message.textContent = "뒤로 1칸 이동하세요!";
       arenaCaption.textContent = "백도! 한 칸 뒤로 이동합니다.";
     } else {
-      message.textContent = `앞으로 ${result.steps}칸 이동하세요!`;
+      // 도, 개, 걸, 윷, 모
+      name.textContent = `${result.name} (${result.steps}칸)`;
+      message.textContent = `${result.steps}칸 이동하세요!`;
       arenaCaption.textContent =
         `${result.name}! ${result.steps}칸 이동합니다.`;
     }
