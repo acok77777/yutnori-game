@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fff5df">
   <title>신나는 윷놀이</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -18,19 +19,25 @@
     <section class="arena" aria-label="윷 던지는 곳">
       <div class="sticks" id="sticks">
         <div class="stick" aria-label="첫 번째 윷">
-          <span class="dots">●　●</span>
+          <span class="dots">● ●</span>
         </div>
-        <div class="stick flipped" aria-label="두 번째 윷">
-          <span class="dots">●　●</span>
+
+        <div class="stick star-stick" aria-label="별 표시 윷">
+          <span class="dots">● ●</span>
         </div>
+
         <div class="stick" aria-label="세 번째 윷">
-          <span class="dots">●　●</span>
+          <span class="dots">● ●</span>
         </div>
-        <div class="stick flipped" aria-label="네 번째 윷">
-          <span class="dots">●　●</span>
+
+        <div class="stick" aria-label="네 번째 윷">
+          <span class="dots">● ●</span>
         </div>
       </div>
-      <p class="arena-caption">윷을 던져 보세요!</p>
+
+      <p class="arena-caption" id="arenaCaption">
+        윷을 던져 보세요!
+      </p>
     </section>
 
     <section class="result" aria-live="polite">
@@ -40,9 +47,55 @@
       <p class="extra" id="extra"></p>
     </section>
 
-    <button id="throwButton" type="button">🎲 윷 던지기</button>
+    <button id="throwButton" type="button">
+      🎲 윷 던지기
+    </button>
 
-    <p class="rule">도 1칸 · 개 2칸 · 걸 3칸 · 윷 4칸 · 모 5칸</p>
+    <section class="rules" aria-label="윷놀이 규칙">
+      <h3>📜 윷놀이 결과 안내</h3>
+
+      <div class="rule-list">
+        <div class="rule-item">
+          <span class="rule-symbol">●</span>
+          <span class="rule-name">도</span>
+          <span class="rule-desc">뒷면 1개 · 앞으로 1칸</span>
+        </div>
+
+        <div class="rule-item">
+          <span class="rule-symbol">● ●</span>
+          <span class="rule-name">개</span>
+          <span class="rule-desc">뒷면 2개 · 앞으로 2칸</span>
+        </div>
+
+        <div class="rule-item">
+          <span class="rule-symbol">● ● ●</span>
+          <span class="rule-name">걸</span>
+          <span class="rule-desc">뒷면 3개 · 앞으로 3칸</span>
+        </div>
+
+        <div class="rule-item">
+          <span class="rule-symbol">● ● ● ●</span>
+          <span class="rule-name">윷</span>
+          <span class="rule-desc">뒷면 4개 · 앞으로 4칸</span>
+        </div>
+
+        <div class="rule-item">
+          <span class="rule-symbol">○ ○ ○ ○</span>
+          <span class="rule-name">모</span>
+          <span class="rule-desc">앞면 4개 · 앞으로 5칸</span>
+        </div>
+
+        <div class="rule-item baekdo-rule">
+          <span class="rule-symbol">★</span>
+          <span class="rule-name">백도</span>
+          <span class="rule-desc">별 윷만 뒷면 · 뒤로 1칸</span>
+        </div>
+      </div>
+
+      <p class="rule-note">
+        ※ 이 앱에서는 별 표시 윷이 단독으로 뒷면일 때 백도로 판정합니다.
+      </p>
+    </section>
   </main>
 
   <script src="script.js"></script>
